@@ -20,7 +20,7 @@
     <!------------------------>
     <!-- Your own CSS files -->
     <!------------------------>
-    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="../style/style.css">
 
 </head>
 <body>
@@ -28,7 +28,73 @@
     <!--  HTML Section -->
     <!----------------------->
 
-    <h1>Hello, world!</h1>
+     <!-- **************************************
+        
+            NAV BAR
+    
+   ******************************************** -->
+   <nav class="navbar navbar-expand-lg navbar-light bg-light ">
+    <a class="navbar-brand" href="#">
+        <img src="/docs/4.4/assets/brand/bootstrap-solid.svg" width="30" height="30" alt="">
+    </a>
+    <a class="navbar-brand mr-auto" href="#">The Coral Corner</a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    
+    <div class="collapse navbar-collapse ml-auto" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item ml-auto">
+                <form class="form-inline px-1">
+                    <a href="">
+                        <button class="btn btn-outline-success" type="button">View</button>
+                    </a>
+                </form>
+            </li>
+            <li class="nav-item ml-auto">
+                <form class="form-inline px-1">
+                    <a href="">
+                        <button class="btn btn-outline-success" type="button">Sell</button>
+                    </a>
+                </form>
+            </li>
+            <li class="nav-item ml-auto">
+                <form class="form-inline px-1">
+                    <a href="">
+                        <button class="btn btn-outline-success" type="button">KB</button>
+                    </a>
+                </form>
+            </li>
+            <li class="nav-item ml-auto">
+                <form class="form-inline px-1">
+                    <a href="">
+                        <button class="btn btn-outline-success" type="button">Account</button>
+                    </a>
+                </form>
+            </li>  
+        </ul>
+    </div>
+</nav>
+
+<div class="jumbotron jumbotron-fluid bg-image ">
+    <div class="container d-flex justify-content-center">
+        <h1 class="display-4 ">The Coral Corner</h1>
+    </div>
+    
+    <div class="container button-trio">
+        <div class="d-flex justify-content-around">
+            <a href="./pages/buy.html"><button class="main-button btn btn-primary">View Listings</button></a> 
+
+            
+        <a href="./pages/sell.html"><button class="main-button btn btn-primary">Create a Listing</button></a> 
+
+         
+            
+            <a href="./pages/wiki.html"><button class="main-button btn btn-primary">View Knowledgebase</button></a> 
+        </div>
+    </div>
+</div>
 
     <!----------------------------------------------->
     <!-- JS: Boostrap, Firebase, API related    -->
