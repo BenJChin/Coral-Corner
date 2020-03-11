@@ -13,14 +13,15 @@
     padding-top: 15em;
 }
 
-.nav-button{
+.nav-button {
     color: blue;
     border: 1px solid blue;
 }
 
-.display-4{
+.display-4 {
     font-family: 'Kaushan Script', cursive;
     font-weight: bold;
+    color: rgba(251, 241, 241, 0.972);
 }
 
 
