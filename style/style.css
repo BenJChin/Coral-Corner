@@ -13,8 +13,9 @@
     padding-top: 15em;
 }
 
-.main-button{
-
+.nav-button{
+    color: blue;
+    border: 1px solid blue;
 }
 
 
