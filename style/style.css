@@ -1,4 +1,37 @@
 
+/*********************************************
+NAV BAR
+
+***********************************************/
+.nav-bar-text {
+    font-family: 'Kaushan Script', cursive;
+}
+
+.nav-button {
+    color: blue;
+    border: none;
+}
+
+.nav-button:hover {
+    border: solid blue;
+}
+
+.nav-list {
+    list-style-type: none;
+}
+
+
+
+/*********************************************
+INDEX AND MAIN
+
+***********************************************/
+.display-4 {
+    font-family: 'Kaushan Script', cursive;
+    font-weight: bold;
+    color: rgba(251, 241, 241, 0.972);
+}
+
 .bg-image {
     background: url(../img/blue-sea-anemone.jpg);
     background-position: center;
@@ -12,19 +45,6 @@
 .button-trio {
     padding-top: 15em;
 }
-
-.nav-button {
-    color: blue;
-    border: 1px solid blue;
-}
-
-.display-4 {
-    font-family: 'Kaushan Script', cursive;
-    font-weight: bold;
-    color: rgba(251, 241, 241, 0.972);
-}
-
-
 
 
 
