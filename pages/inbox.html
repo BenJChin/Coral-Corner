@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>Sell page</title>
+        <title>Inbox page</title>
         <meta name="comp1800 boilerplate code" content="my bcit project">
         <meta name="author" content="BCIT">
 
@@ -21,7 +21,8 @@
         <!------------------------>
         <!-- Your own CSS files -->
         <!------------------------>
-        <link rel="stylesheet" href="..style/style.css">
+        <link rel="stylesheet" href="../style/style.css">
+
     </head>
     <body>
         <!------------------->
@@ -29,11 +30,11 @@
         <!------------------->
 
         <nav class="navbar navbar-expand-lg navbar-light bg-light ">
-            <a class="navbar-brand" href="#">
-                <img src="/docs/4.4/assets/brand/bootstrap-solid.svg" width="30" height="30" alt="">
+            <a class="navbar-brand" href="./index.html">
+                <img src="../img/icons/coral-reef.png" width="30" height="30" alt="a small icon picture of coral">
             </a>
-            <a class="navbar-brand mr-auto" href="#">The Coral Corner</a>
-    
+            <a class="navbar-brand mr-auto nav-bar-text" href="./index.html">The Coral Corner</a>
+        
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button>
@@ -43,28 +44,28 @@
                     <li class="nav-item ml-auto">
                         <form class="form-inline px-1">
                             <a href="">
-                                <button class="btn btn-outline-success nav-button" type="button">View</button>
+                                <button class="btn nav-button" type="button"><img src="../img/icons/browser.png" alt="an icon of a browser" height="30" width="30"> </button>
                             </a>
                         </form>
                     </li>
                     <li class="nav-item ml-auto">
                         <form class="form-inline px-1">
                             <a href="">
-                                <button class="btn btn-outline-success nav-button" type="button">Sell</button>
+                                <button class="btn nav-button" type="button"><img src="../img/icons/exchange.png" alt="an icon of a dollar sign" height="30" width="30"> </button>
                             </a>
                         </form>
                     </li>
                     <li class="nav-item ml-auto">
                         <form class="form-inline px-1">
                             <a href="">
-                                <button class="btn btn-outline-success nav-button" type="button">KB</button>
+                                <button class="btn nav-button" type="button"><img src="../img/icons/notebook.png" alt="an icon of a notebook" height="30" width="30"></button>
                             </a>
                         </form>
                     </li>
                     <li class="nav-item ml-auto">
                         <form class="form-inline px-1">
                             <a href="">
-                                <button class="btn btn-outline-success  nav-button" type="button">Account</button>
+                                <button class="btn nav-button" type="button" >My Account</button>
                             </a>
                         </form>
                     </li>  
@@ -80,36 +81,40 @@
                 </button>
             </div>
         </div>
-        
-        <h1>Fill out the details</h1>
-        <br>
-        <div class="input-group px-2">
-            <div class="input-group-prepend">
-                <span class="input-group-text">Title</span>
-            </div>
-            <input type="text" class="form-control" placeholder="Title">
-        </div><br>
-        <div class="input-group px-2">
-            <div class="input-group-prepend">
-                <span class="input-group-text">Parameters</span>
-            </div>
-            <input type="text" class="form-control" placeholder="Parameters">
-        </div><br>
-        <div class="input-group px-2">
-            <div class="input-group-prepend">
-                <span class="input-group-text">Cost</span>
-            </div>
-            <input type="text" class="form-control" placeholder="Cost">
-        </div><br>
-        <div class="input-group px-2">
-            <div class="input-group-prepend">
-                <span class="input-group-text">Something</span>
-            </div>
-            <input type="text" class="form-control" placeholder="Something">
-        </div><br>
 
-        <button type="button" class="btn btn-danger">Cancel</button>
-        <button type="button" class="btn btn-success">Post</button>
+        <br>
+        <h1>Inbox</h1>
+        <br>
+        <table class="table table-hover">
+        
+            <tbody>
+                <tr>
+                    <td>Sender</td>
+                    <td>Message</td>
+                    <td>Time</td>
+                </tr>
+                <tr>
+                    <td>Sender</td>
+                    <td>Message</td>
+                    <td>Time</td>
+                </tr>
+                <tr>
+                    <td>Sender</td>
+                    <td>Message</td>
+                    <td>Time</td>
+                </tr>
+                <tr>
+                    <td>Sender</td>
+                    <td>Message</td>
+                    <td>Time</td>
+                </tr>
+                <tr>
+                    <td>Sender</td>
+                    <td>Message</td>
+                    <td>Time</td>
+                </tr>
+            </tbody>
+        </table>
 
         <!----------------------------------------------->
         <!-- JS: Boostrap, Firebase, other API's    -->
