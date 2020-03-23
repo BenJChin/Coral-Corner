@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <title>Coral Corner Login</title>
-    <meta name="coral corner login page" content="a bcit 1800 project">
-    <meta name="author" content="Coral Corner">
+    <meta name="comp1800 boilerplate code" content="my bcit project">
+    <meta name="author" content="BCIT">
 
     <!----------------------------------------------->
     <!--  Meta tag for rendering on mobile devices -->
@@ -20,7 +20,8 @@
     <!------------------------>
     <!-- Your own CSS files -->
     <!------------------------>
-    <link rel="stylesheet" href="../styles/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Kaushan+Script&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./../style/style.css">
 
 </head>
 <body>
@@ -28,7 +29,67 @@
     <!--  HTML Section -->
     <!----------------------->
 
+<nav class="navbar navbar-expand-lg navbar-light bg-light ">
+    <a class="navbar-brand" href="../index.html">
+        <img src="../img/icons/coral-reef.png" width="30" height="30" alt="a small icon picture of coral">
+    </a>
+    <a class="navbar-brand mr-auto nav-bar-text" href="../index.html">The Coral Corner</a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
     
+
+    <!--
+        <div class="collapse navbar-collapse ml-auto" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto"></ul>
+
+    -->
+    
+        <!--
+            
+            <li class="nav-item ml-auto">
+                <form class="form-inline px-1">
+                    <a href="">
+                        <button class="btn btn-outline-success nav-button" type="button">View</button>
+                    </a>
+                </form>
+            </li>
+            <li class="nav-item ml-auto">
+                <form class="form-inline px-1">
+                    <a href="">
+                        <button class="btn btn-outline-success nav-button" type="button">Sell</button>
+                    </a>
+                </form>
+            </li>
+            <li class="nav-item ml-auto">
+                <form class="form-inline px-1">
+                    <a href="">
+                        <button class="btn btn-outline-success nav-button" type="button">KB</button>
+                    </a>
+                </form>
+            </li>
+
+
+        -->
+        
+        <!--
+
+            <li class="nav-item ml-auto nav-list">
+                <form class="form-inline px-1">
+                    <a href="./pages/login.html">
+                        <button class="btn btn-outline-success nav-button" type="button">Log In</button>
+                    </a>
+                </form>
+            </li> 
+
+        -->
+             
+        </ul>
+    </div>
+</nav>
+
+    <h1>Please login</h1>
     <div id="firebaseui-auth-container"></div>
     <div id="loader">Loading...</div>
 
@@ -36,27 +97,40 @@
     <!----------------------------------------------->
     <!-- JS: Boostrap, Firebase, API related    -->
     <!----------------------------------------------->
+
+    <!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
+
+  
+
+
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-
-    <script src="https://www.gstatic.com/firebasejs/7.11.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.9.2/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.9.2/firebase-firestore.js"></script>
+      
     <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.11.0/firebase-analytics.js"></script>
+    
 
+    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/7.10.0/firebase-app.js"></script>
 
-    <script src="../scripts/firebase_api_coral.js"> </script>
+  <!-- If you enabled Analytics in your project, add the Firebase SDK for Analytics -->
+  <script src="https://www.gstatic.com/firebasejs/7.10.0/firebase-analytics.js"></script>
+
+  <!-- Add Firebase products that you want to use -->
+  <script src="https://www.gstatic.com/firebasejs/7.10.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.10.0/firebase-firestore.js"></script>
+
+  <script src="../scripts/firebase_api_coral.js"> </script>
   
     <!--------------------------------------------------------------------->
     <!-- JS files: Your own JavaScript functions included here    -->
     <!--------------------------------------------------------------------->
-    <script src="../scripts/script.js"></script>
+    <script src="scripts/script.js"></script>
 
      <!--------------------------------------------------------------------->
     <!-- Make calls to your own JavaScript functions, here below-->
     <!---------------------------------------------------------------------->
+
     <script>
         // This snippet goes at the JS section at the end of the body tag in "login.html"
         // After firebase libraries via CDN are sourced
@@ -94,7 +168,7 @@
                                 console.log("New user added to firestore");
                                 window.location.assign("main.html");
                             })
-                            .catch(function (error) {   
+                            .catch(function (error) {
                                 console.log("Error adding new user: " + error);
                             });
                     } else {
@@ -131,6 +205,8 @@
         // Inject the login interface into the HTML
         ui.start('#firebaseui-auth-container', uiConfig);
     </script>
+
+    
 
 </body>
 </html> 
