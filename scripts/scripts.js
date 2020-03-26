@@ -1,7 +1,13 @@
 
 
 
-
+/*****************
+ * postListing used in the POST button of the sell.html page
+ * 
+ * sends the information from the parameters into the DB.
+ * 
+ * VALIDATION OF INPUT STILL NEEDS TO BE DONE
+ */
 
 function postListing() {
     let listTitle = document.getElementById("inputTitle").value;
@@ -64,8 +70,15 @@ function postListing() {
             document.getElementById("caffeinecount").innerHTML = x; 
             }); */
     });
-    
 }
+
+
+
+
+
+
+
+
 
 
 
