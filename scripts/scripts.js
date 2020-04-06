@@ -354,17 +354,16 @@ function parseURL() {
 
 function getSpecificListing(userID) {
     firebase.auth().onAuthStateChanged(function (user) {
-        console.log("im in function");
+        
         db.collection("listing").doc(userID)
         .get()
         .then(function(doc) {
-            
             let listingData = doc.data();
-            let listingUserID = listingData.user;
+            let listingID = doc.id;
             let contactSellerButton = document.getElementById("listing_contact_button");
 
             createListingPage(listingData);
-            updateContactSellerButton(contactSellerButton, listingUserID);
+            updateContactSellerButton(contactSellerButton, listingID);
 
             
         })
@@ -381,7 +380,7 @@ function createListingPage(listing) {
     titleContainer.classList.add("container");
     domInsertion.appendChild(titleContainer);
 
-    let title = document.createElement("h3  ");
+    let title = document.createElement("h3");
     title.innerHTML = listing.title;
     titleContainer.appendChild(title);
 
@@ -466,4 +465,80 @@ function createListingPage(listing) {
 function updateContactSellerButton(elementID, userID) {
     elementID.href = `./sendMessage.html?${userID}`;
 }
+
+/****************************
+ * SEND MESSAGE.HTML
+ * 
+ **************************/
+
+function sendMessageHandler() {
+    sendMessage(parseURL());
+}
+
+function getListingData(listerID) {
+    firebase.auth().onAuthStateChanged(function (user) {
+        
+        db.collection("listing").doc(listerID)
+        .get()
+        .then(function(doc) {
+            console.log("im in function");
+            let listingData = doc.data();
+            //let listingUserID = listingData.user;
+
+            document.getElementById("listing_title").value = listingData.title;
+        })
+        .catch((error) => {
+            console.log(`Error getting listings: ${error}`);
+        });
+    });
+}
+
+
+function sendMessage(listerID) {
+    let messageSubject = document.getElementById("message_subject").value;
+    let message = document.getElementById("messageBody").value;
+    let thisUser = firebase.auth().currentUser.uid;
+
+    let thisDate = new Date();
+    let listYear = thisDate.getFullYear();
+    let listMonth = thisDate.getMonth();
+    let listDay = thisDate.getDate();
+    let listHour = thisDate.getHours();
+    let listMin = thisDate.getMinutes();
+    let listMonthTranslated = translateMonth(listMonth);
+
+    let listDate = `${listMonthTranslated} ${listDay}, ${listYear}, ${listHour}:${listMin}`;
+
+    let thisMessage = {
+        sender: thisUser,
+        receiver: listerID,
+        subject: messageSubject,
+        message: message,
+        year: listYear,
+        month: listMonth,
+        day: listDay,
+        date: listDate,
+        hour: listHour,
+        minute: listMin
+    }
+
+    firebase.auth().onAuthStateChanged(function (user) {
+        db.collection("messages").add(thisMessage)
+        .then(function(docRef){
+            console.log(`listing created with id ${docRef}. REMEMBER TO UPDATE THE PAGE REDIRECT`);
+        })
+        .catch(function(error){
+            console.log(`error adding listing --> ${error}`);
+        })
+        .then(function() {
+            //THIS NEEDS TO BE CHANGED TO A SENT MESSAGE .HTML
+            window.location.href = "./main.html";
+        });
+    });
+}
+
+
+
+
+
 
