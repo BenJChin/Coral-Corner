@@ -381,7 +381,7 @@ function createListingPage(listing) {
     titleContainer.classList.add("container");
     domInsertion.appendChild(titleContainer);
 
-    let title = document.createElement("h1");
+    let title = document.createElement("h3  ");
     title.innerHTML = listing.title;
     titleContainer.appendChild(title);
 
