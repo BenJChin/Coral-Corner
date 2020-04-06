@@ -79,12 +79,18 @@ Buy.HTML
 .listing_subtext {
     margin-top: 0px;
     margin-bottom: 0px;
-    font-size: 12px;
+    font-size: 14px;
 }
 
 
+/*********************************************
+Listing.html
 
+***********************************************/
 
-
+.inline_listing_text {  
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
 
 

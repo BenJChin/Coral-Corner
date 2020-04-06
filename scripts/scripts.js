@@ -49,7 +49,8 @@ function postListing() {
         year: listYear,
         month: listMonth,
         day: listDay,
-        date: listDate
+        date: listDate,
+        fragType: listFragType
     }
 
     
@@ -153,7 +154,7 @@ function getUserListings() {
 
             }); 
         }).then(function() {
-            if (listings.length == 0) {
+            if (userListings.length == 0) {
                 let noListingsMsg = document.createElement("p");
                 noListingsMsg.innerHTML = "You haven't created any listings!";
                 document.getElementById(card_deck).appendChild(noListingsMsg);
@@ -251,6 +252,7 @@ function createListingCard(listing) {
 
 function getListings() {
     let listings = [];
+    let thisDocID;
 
     firebase.auth().onAuthStateChanged(function (user) {
         console.log("im in function");
@@ -258,10 +260,15 @@ function getListings() {
         .get()
         .then(function(querySnapshot) {
             querySnapshot.forEach(function(doc) {
-                listings.push(doc.data());
-
+                
+                let listingData = doc.data();
+                listingData.id = doc.id;
+                listings.push(listingData);
+                console.log(listings);
             }); 
         }).then(function() {
+
+
             listings.forEach((listing) => {
                 createListingRow(listing);
             });
@@ -272,6 +279,7 @@ function getListings() {
         });
     });
 }
+
 
 
 function createListingRow(listing) {
@@ -287,23 +295,28 @@ function createListingRow(listing) {
     articleDiv.appendChild(imgDiv);
 
     let imgLink = document.createElement("a");
+    imgLink.href = `./listing.html?${listing.id}`
+
     imgDiv.appendChild(imgLink);
 
     let img = document.createElement("img");
     img.src = "../img/CoralA.jpg";
     img.alt = "A picture of coral";
-    //ADD THE HREF HERE TO POINT TO THE LISTING
-    img.innerHTML = `<a href="#" title="Results" ><img src="../img/CoralA.jpg" alt="listing1"/></a>`;
-    imgDiv.appendChild(img);
+    imgLink.appendChild(img);
     
 
     let listingInfoDiv = document.createElement("div");
     listingInfoDiv.classList.add("col-lg-9");
     articleDiv.appendChild(listingInfoDiv);
 
+    let titleLink = document.createElement("a");
+    titleLink.href = `./listing.html?${listing.id}`;
+    listingInfoDiv.appendChild(titleLink);
+
     let listingTitle = document.createElement("h4");
     listingTitle.innerHTML = listing.title;
-    listingInfoDiv.appendChild(listingTitle);
+    titleLink.appendChild(listingTitle);
+
 
     let listingDate = document.createElement("p");
     listingDate.classList.add("text-muted");
@@ -327,15 +340,130 @@ function createListingRow(listing) {
 
 
 
+/****************************
+ * LISTING.HTML
+ * 
+ **************************/
 
+function parseURL() {
+    let queryString = decodeURIComponent(window.location.search)
+    let queries = queryString.split("?");
+    let userID = queries[1];
+    return userID;
+}
 
+function getSpecificListing(userID) {
+    firebase.auth().onAuthStateChanged(function (user) {
+        console.log("im in function");
+        db.collection("listing").doc(userID)
+        .get()
+        .then(function(doc) {
+            
+            let listingData = doc.data();
+            let listingUserID = listingData.user;
+            let contactSellerButton = document.getElementById("listing_contact_button");
 
+            createListingPage(listingData);
+            updateContactSellerButton(contactSellerButton, listingUserID);
 
+            
+        })
+        .catch((error) => {
+            console.log(`Error getting listings: ${error}`);
+        });
+    });
+}
 
+function createListingPage(listing) {
+    let domInsertion = document.getElementById("listing_insertion");
 
+    let titleContainer = document.createElement("div");
+    titleContainer.classList.add("container");
+    domInsertion.appendChild(titleContainer);
 
+    let title = document.createElement("h1");
+    title.innerHTML = listing.title;
+    titleContainer.appendChild(title);
 
+    let dateText = document.createElement("p");
+    dateText.classList.add("text-muted");
+    dateText.classList.add("listing_subtext");
+    dateText.innerHTML = `Date Posted: ${listing.date}`;
+    titleContainer.appendChild(dateText);
 
+    let locationText = document.createElement("p");
+    locationText.classList.add("text-muted");
+    locationText.classList.add("listing_subtext")
+    locationText.innerHTML = `Location: ${listing.city}, ${listing.province.toUpperCase()}`;
+    titleContainer.appendChild(locationText);
 
+    let listingTextContainer = document.createElement("div");
+    listingTextContainer.classList.add("container");
+    listingTextContainer.classList.add("py-3")
+    domInsertion.appendChild(listingTextContainer);
 
+    let row = document.createElement("div");
+    row.classList.add("row");
+    listingTextContainer.appendChild(row);
+
+    let imgContainer = document.createElement("div");
+    imgContainer.classList.add("col-md-6");
+    imgContainer.classList.add("py-1");
+    row.appendChild(imgContainer);
+
+    let img = document.createElement("img");
+    img.classList.add("img-fluid");
+    img.src = "../img/coral.jpg";
+    img.alt = "a picture of coral";
+    imgContainer.appendChild(img);
+
+    let descriptionContainer = document.createElement("div");
+    descriptionContainer.classList.add("col-md-6");
+    descriptionContainer.classList.add("py-1");
+    row.appendChild(descriptionContainer);
+
+    let speciesContainer = document.createElement("div");
+    speciesContainer.classList.add("py-2");
+    descriptionContainer.appendChild(speciesContainer);
+
+    let speciesTitle = document.createElement("h5");
+    speciesTitle.innerHTML = `Species:`;
+    speciesContainer.appendChild(speciesTitle);
+
+    let species = document.createElement("p");
+    species.innerHTML = listing.species;
+    speciesContainer.appendChild(species);
+
+    let fragContainer = document.createElement("div");
+    fragContainer.classList.add("py-2");
+    descriptionContainer.appendChild(fragContainer);
+
+    let fragTitle = document.createElement("h5");
+    fragTitle.innerHTML = `Coral Size:`;
+    fragContainer.appendChild(fragTitle);
+
+    let frag = document.createElement("p");
+    frag.innerHTML = listing.fragType;
+    fragContainer.appendChild(frag);
+
+    //awful variable name
+    let userDescriptionContainer = document.createElement("div");
+    userDescriptionContainer.classList.add("py-2");
+    descriptionContainer.appendChild(userDescriptionContainer);
+
+    let descriptionTitle = document.createElement("h5");
+    descriptionTitle.innerHTML = `Description:`;
+    userDescriptionContainer.appendChild(descriptionTitle);
+
+    let description = document.createElement("p");
+    description.innerHTML = listing.description;
+    userDescriptionContainer.appendChild(description);
+
+    let cost = document.createElement("h5");
+    cost.innerHTML = `Cost: ${listing.cost}`;
+}
+
+function updateContactSellerButton(elementID, userID) {
+    elementID.href = `./sendMessage.html?${userID}`;
+}
 
