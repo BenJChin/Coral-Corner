@@ -477,29 +477,7 @@ function updateContactSellerButton(elementID, listingID, listerID, userID) {
     }
 }
 
-/**
- * probably a garbage function i'll remove later? not sure what tod ow ith it now.
- */
-function checkIfLister() {
-    firebase.auth().onAuthStateChanged(function (user) {
-        
-        db.collection("listing").doc(userID)
-        .get()
-        .then(function(doc) {
-            let listingData = doc.data();
-            let listingID = doc.id;
-            let contactSellerButton = document.getElementById("listing_contact_button");
 
-            createListingPage(listingData);
-            updateContactSellerButton(contactSellerButton, listingID);
-
-            
-        })
-        .catch((error) => {
-            console.log(`Error getting listings: ${error}`);
-        });
-    });
-}
 
 
 /****************************
@@ -532,12 +510,17 @@ function getListingData(listerID) {
 
 function sendMessage(listerID) {
     let listingUserID;
+    let listingData;
+    let thisListingID;
+  
     db.collection("listing").doc(listerID)
         .get()
         .then(function(doc) {
             console.log("why");
-            let docData = doc.data();
-            listingUserID = docData.user;
+            listingData = doc.data();
+            thisListingID = doc.id;
+         
+            listingUserID = listingData.user;
             console.log("in function: " + listingUserID);
         }).then(function() {
             let messageSubject = document.getElementById("message_subject").value;
@@ -564,7 +547,9 @@ function sendMessage(listerID) {
                 day: listDay,
                 date: listDate,
                 hour: listHour,
-                minute: listMin
+                minute: listMin,
+                listingID: thisListingID,
+                listingTitle: listingData.title
             }
             firebase.auth().onAuthStateChanged(function (user) {
                 db.collection("messages").add(thisMessage)
@@ -597,8 +582,10 @@ function populateInbox() {
         .get()
         .then(function(querySnapshot) {
             querySnapshot.forEach(function(doc) {
-                userMessages.push(doc.data());
-
+                let thisMessage = doc.data();
+                thisMessage.docID = doc.id;
+                userMessages.push(thisMessage);
+                
             }); 
         }).then(function() {
             if (userMessages.length == 0) {
@@ -609,19 +596,18 @@ function populateInbox() {
                 userMessages.forEach((message) => {
                     let msgSenderID = message.sender;
                     let msgSenderName;
+                    let messageDocID = message.docID;
+
+                    
+
                     db.collection("users").doc(msgSenderID)
                     .get()
                     .then(function(doc) {
                         let docData = doc.data();
-
                         msgSenderName = docData.name;
-                        let messageID = doc.id;
-
-
-                        console.log(`in getusername func ${msgSenderName}`);
-                        console.log(`in getusername MSGID ${messageID}`);
+                    
                         
-                        createInboxMessage(message, msgSenderName, messageID);
+                        createInboxMessage(message, msgSenderName, messageDocID);
 
                     })
                     .catch((error) => {
@@ -652,23 +638,73 @@ function createInboxMessage(message, msgSenderName, messageID) {
 
     let sender = document.createElement("td");
     let senderLink = document.createElement("a");
-    senderLink.href = `./message.html?${inboxMessageID}`;
+    senderLink.href = `./viewMessage.html?${inboxMessageID}`;
     senderLink.innerHTML = senderName
     sender.appendChild(senderLink);
     tableRow.appendChild(sender);
 
     let subject = document.createElement("td");
-    subject.innerHTML = message.subject;
+    let subjectLink = document.createElement("a");
+    subjectLink.href = `./viewMessage.html?${inboxMessageID}`;
+    subjectLink.innerHTML = message.subject;
+    subject.appendChild(subjectLink);
     tableRow.appendChild(subject);
 
     let dateSent = document.createElement("td");
-    dateSent.innerHTML = message.date;
+    let dateLink = document.createElement("a");
+    dateLink.href = `./viewMessage.html?${inboxMessageID}`;
+    dateLink.innerHTML = message.subject;
+    dateSent.appendChild(dateLink);
     tableRow.appendChild(dateSent);
 
-    console.log(`in createInboxMsg senderID: ${senderID}`);
-    console.log(`in createInboxMsg : ${senderName}`);
-    console.log(`in createInboxMsg : ${message.id}`);
 }
+
+
+/****************************
+ * ViewMessage.HTML
+ * 
+ **************************/
+
+function getMessage(messageID) {
+    let messageData;
+    firebase.auth().onAuthStateChanged(function (user) {
+        
+        db.collection("messages").doc(messageID)
+        .get()
+        .then(function(doc) {
+            messageData = doc.data();
+
+            
+        }).then(function() {
+            db.collection("users").doc(messageData.sender)
+        .get()
+        .then(function(user) {
+            userData = user.data();
+            userName = userData.name;
+
+            document.getElementById("view_message_sender").innerHTML = userName;
+            document.getElementById("view_message_subject").innerHTML = messageData.subject;
+            document.getElementById("view_message_body").innerHTML = messageData.message;
+            document.getElementById("view_message_listing").innerHTML = messageData.listingTitle;
+
+            changeReplyButton(messageData.listingID);
+        })
+        })
+        .catch((error) => {
+            console.log(`Error getting listings: ${error}`);
+        }); 
+    });
+}
+
+function changeReplyButton(listingID) {
+    let replyButton = document.getElementById("view_message_reply_button");
+    replyButton.href = `./sendMessage.html?${listingID}`;
+}
+
+
+
+
+
 
 
 
