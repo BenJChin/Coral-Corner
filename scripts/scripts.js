@@ -11,6 +11,10 @@
  * 
  */
 
+ /**
+  * Method called when the BUTTON is pushed. Sends the form info
+  * into database
+  */
 function postListing() {
     let listTitle = document.getElementById("inputTitle").value;
     let listPrice = parseInt(document.getElementById("inputPrice").value);
@@ -50,7 +54,8 @@ function postListing() {
         month: listMonth,
         day: listDay,
         date: listDate,
-        fragType: listFragType
+        fragType: listFragType,
+        visible: true
     }
 
     
@@ -65,21 +70,6 @@ function postListing() {
         .then(function() {
             window.location.href = "./myListings.html";
         });
-
-
-
-        /*
-        db.collection("users/").doc(user.uid)
-            .onSnapshot(function (d) {
-            console.log("Current data: ", d.data());
-
-            if (d.get("total") != null)
-                x = d.data()["total"];
-            else
-                x = 0; // user has not added any cups yet
-            console.log(x);
-            document.getElementById("caffeinecount").innerHTML = x; 
-            }); */
     });
 }
 
@@ -237,40 +227,33 @@ function createListingCard(listing) {
  * BUY.HTML
  * 
  **************************/
-/*
-        db.collection("users/").doc(user.uid)
-            .onSnapshot(function (d) {
-            console.log("Current data: ", d.data());
 
-            if (d.get("total") != null)
-                x = d.data()["total"];
-            else
-                x = 0; // user has not added any cups yet
-            console.log(x);
-            document.getElementById("caffeinecount").innerHTML = x; 
-            }); */
-
+/**
+ * The main function for this page that gets the
+ * DB information for listings and then calls
+ * the functions to create the DOM elements to display them
+ */
 function getListings() {
     let listings = [];
     let thisDocID;
 
     firebase.auth().onAuthStateChanged(function (user) {
-        console.log("im in function");
         db.collection("listing")
         .get()
         .then(function(querySnapshot) {
             querySnapshot.forEach(function(doc) {
-                
                 let listingData = doc.data();
                 listingData.id = doc.id;
                 listings.push(listingData);
-                console.log(listings);
             }); 
         }).then(function() {
 
 
             listings.forEach((listing) => {
-                createListingRow(listing);
+                if (listing.visible == true) {
+                    createListingRow(listing);
+                }
+                
             });
         })
 
@@ -281,7 +264,11 @@ function getListings() {
 }
 
 
-
+/**
+ * Creates the DOM elements to show the listings on the page,
+ * using the listing object (each individual listng) from the getListing method
+ * @param {} listing 
+ */
 function createListingRow(listing) {
     let articleDiv = document.createElement("article");
     articleDiv.classList.add("search-result");
@@ -344,14 +331,21 @@ function createListingRow(listing) {
  * LISTING.HTML
  * 
  **************************/
-
+/**
+ * Pulls the value after "?" in the HTML. Used to pass values
+ * between pages
+ */
 function parseURL() {
     let queryString = decodeURIComponent(window.location.search)
     let queries = queryString.split("?");
     let userID = queries[1];
     return userID;
 }
-
+/**
+ * Gets the specific listing from the DB using the listing ID in the HTML after 
+ * the query string "?". 
+ * @param {*} userID 
+ */
 function getSpecificListing(userID) {
     firebase.auth().onAuthStateChanged(function (user) {
         
@@ -360,19 +354,21 @@ function getSpecificListing(userID) {
         .then(function(doc) {
             let listingData = doc.data();
             let listingID = doc.id;
+            let listingListerID = listingData.user;
             let contactSellerButton = document.getElementById("listing_contact_button");
 
             createListingPage(listingData);
-            updateContactSellerButton(contactSellerButton, listingID);
-
-            
+            updateContactSellerButton(contactSellerButton, listingID, listingListerID, user.uid);
         })
         .catch((error) => {
             console.log(`Error getting listings: ${error}`);
         });
     });
 }
-
+/**
+ * Creates the DOM elements for the listing to display it on the page
+ * @param {} listing 
+ */
 function createListingPage(listing) {
     let domInsertion = document.getElementById("listing_insertion");
 
@@ -461,11 +457,29 @@ function createListingPage(listing) {
     let cost = document.createElement("h5");
     cost.innerHTML = `Cost: ${listing.cost}`;
 }
-
-function updateContactSellerButton(elementID, userID) {
-    elementID.href = `./sendMessage.html?${userID}`;
+/**
+ * Checks if the user browsing the page is the same user who made the listing. If 
+ * true, changes the button to navigate back to myListing. Otherwise, user can
+ * send message to the lister.
+ * 
+ * @param {the button ID} elementID 
+ * @param {the ID of the listing in the DB} listingID 
+ * @param {the ID of the lister in the DB} listerID 
+ * @param {the current logged in user of the page} userID 
+ */
+function updateContactSellerButton(elementID, listingID, listerID, userID) {
+    if (listerID == userID) {
+        
+        elementID.innerHTML = `<button type="button" class="btn btn-primary btn-lg" >My Listings</button>`;
+        elementID.href = `./myListings.html`;
+    } else {
+        elementID.href = `./sendMessage.html?${listingID}`;
+    }
 }
 
+/**
+ * probably a garbage function i'll remove later? not sure what tod ow ith it now.
+ */
 function checkIfLister() {
     firebase.auth().onAuthStateChanged(function (user) {
         
@@ -486,7 +500,7 @@ function checkIfLister() {
         });
     });
 }
-}
+
 
 /****************************
  * SEND MESSAGE.HTML
@@ -503,7 +517,6 @@ function getListingData(listerID) {
         db.collection("listing").doc(listerID)
         .get()
         .then(function(doc) {
-            console.log("im in function");
             let listingData = doc.data();
             //let listingUserID = listingData.user;
 
@@ -516,51 +529,146 @@ function getListingData(listerID) {
 }
 
 
+
 function sendMessage(listerID) {
-    let messageSubject = document.getElementById("message_subject").value;
-    let message = document.getElementById("messageBody").value;
-    let thisUser = firebase.auth().currentUser.uid;
+    let listingUserID;
+    db.collection("listing").doc(listerID)
+        .get()
+        .then(function(doc) {
+            console.log("why");
+            let docData = doc.data();
+            listingUserID = docData.user;
+            console.log("in function: " + listingUserID);
+        }).then(function() {
+            let messageSubject = document.getElementById("message_subject").value;
+            let message = document.getElementById("messageBody").value;
+            let thisUser = firebase.auth().currentUser.uid;
 
-    let thisDate = new Date();
-    let listYear = thisDate.getFullYear();
-    let listMonth = thisDate.getMonth();
-    let listDay = thisDate.getDate();
-    let listHour = thisDate.getHours();
-    let listMin = thisDate.getMinutes();
-    let listMonthTranslated = translateMonth(listMonth);
+            let thisDate = new Date();
+            let listYear = thisDate.getFullYear();
+            let listMonth = thisDate.getMonth();
+            let listDay = thisDate.getDate();
+            let listHour = thisDate.getHours();
+            let listMin = thisDate.getMinutes();
+            let listMonthTranslated = translateMonth(listMonth);
 
-    let listDate = `${listMonthTranslated} ${listDay}, ${listYear}, ${listHour}:${listMin}`;
+            let listDate = `${listMonthTranslated} ${listDay}, ${listYear}, ${listHour}:${listMin}`;
 
-    let thisMessage = {
-        sender: thisUser,
-        receiver: listerID,
-        subject: messageSubject,
-        message: message,
-        year: listYear,
-        month: listMonth,
-        day: listDay,
-        date: listDate,
-        hour: listHour,
-        minute: listMin
-    }
+            let thisMessage = {
+                sender: thisUser,
+                receiver: listingUserID,
+                subject: messageSubject,
+                message: message,
+                year: listYear,
+                month: listMonth,
+                day: listDay,
+                date: listDate,
+                hour: listHour,
+                minute: listMin
+            }
+            firebase.auth().onAuthStateChanged(function (user) {
+                db.collection("messages").add(thisMessage)
+                .then(function(docRef){
+                    console.log(`listing created with id ${docRef}. REMEMBER TO UPDATE THE PAGE REDIRECT`);
+                })
+                .catch(function(error){
+                    console.log(`error adding listing --> ${error}`);
+                })
+                .then(function() {
+                    //THIS NEEDS TO BE CHANGED TO A SENT MESSAGE .HTML
+                    window.location.href = "./main.html";
+                });
+            });
+        })
+        .catch((error) => {
+            console.log(`Error getting messages: ${error}`);
+        });
+}
 
+/****************************
+ * INBOX.HTML
+ * 
+ **************************/
+function populateInbox() {
+    
+    let userMessages = [];
     firebase.auth().onAuthStateChanged(function (user) {
-        db.collection("messages").add(thisMessage)
-        .then(function(docRef){
-            console.log(`listing created with id ${docRef}. REMEMBER TO UPDATE THE PAGE REDIRECT`);
+        db.collection("messages").where("receiver", "==", user.uid)
+        .get()
+        .then(function(querySnapshot) {
+            querySnapshot.forEach(function(doc) {
+                userMessages.push(doc.data());
+
+            }); 
+        }).then(function() {
+            if (userMessages.length == 0) {
+                let emptyInboxMsg = document.getElementById("inbox_insertion");
+                emptyInboxMsg.innerHTML = "You have no messages!";
+            } else {
+
+                userMessages.forEach((message) => {
+                    let msgSenderID = message.sender;
+                    let msgSenderName;
+                    db.collection("users").doc(msgSenderID)
+                    .get()
+                    .then(function(doc) {
+                        let docData = doc.data();
+
+                        msgSenderName = docData.name;
+                        let messageID = doc.id;
+
+
+                        console.log(`in getusername func ${msgSenderName}`);
+                        console.log(`in getusername MSGID ${messageID}`);
+                        
+                        createInboxMessage(message, msgSenderName, messageID);
+
+                    })
+                    .catch((error) => {
+                        console.log(`Error getting messages: ${error}`);
+                    });
+
+
+                    
+
+
+                })
+            }
+
         })
-        .catch(function(error){
-            console.log(`error adding listing --> ${error}`);
-        })
-        .then(function() {
-            //THIS NEEDS TO BE CHANGED TO A SENT MESSAGE .HTML
-            window.location.href = "./main.html";
+        .catch((error) => {
+            console.log(`Error getting messages: ${error}`);
         });
     });
 }
 
+function createInboxMessage(message, msgSenderName, messageID) {
+    let senderID = message.sender;
+    let senderName = msgSenderName;
+    let inboxMessageID = messageID;
 
+    let tableRow = document.createElement("tr");
+    document.getElementById("inbox_insertion").appendChild(tableRow);
 
+    let sender = document.createElement("td");
+    let senderLink = document.createElement("a");
+    senderLink.href = `./message.html?${inboxMessageID}`;
+    senderLink.innerHTML = senderName
+    sender.appendChild(senderLink);
+    tableRow.appendChild(sender);
+
+    let subject = document.createElement("td");
+    subject.innerHTML = message.subject;
+    tableRow.appendChild(subject);
+
+    let dateSent = document.createElement("td");
+    dateSent.innerHTML = message.date;
+    tableRow.appendChild(dateSent);
+
+    console.log(`in createInboxMsg senderID: ${senderID}`);
+    console.log(`in createInboxMsg : ${senderName}`);
+    console.log(`in createInboxMsg : ${message.id}`);
+}
 
 
 
