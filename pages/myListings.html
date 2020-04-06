@@ -20,6 +20,7 @@
     <!------------------------>
     <!-- Your own CSS files -->
     <!------------------------>
+    <link href="https://fonts.googleapis.com/css?family=Kaushan+Script&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../style/style.css">
 
 </head>
@@ -82,6 +83,7 @@
 
     <div class="container">
 
+<<<<<<< HEAD
         <hgroup class="mb20">
             <h1>My Listings</h1>
             <h2 class="lead">Your Listings</strong></h2>								
@@ -126,6 +128,110 @@
     
         </section>
     </div>    
+=======
+    <div class="container-md">
+        <h2>My Listings</h2>
+    </div>
+
+    <div class="container-md">  
+        <div class="card-deck" id="card_deck">
+            <div class="card">
+                <img class="card-img-top card_img" src="../img/placeholder_coral.jpeg" alt="Card image cap">
+                <div class="card-body">
+                  <h4 class="card-title">Card title</h4>
+                  <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                  <p class="card-text">
+                    Some quick example text to build on the card title
+                    and make up the bulk of the card's content.
+                  </p>
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted">
+                        <a href="#!" class="card-link">View</a>
+                        <a href="#!" class="card-link">Delete</a>
+                    </small>
+                </div>
+            </div>
+        </div>
+        <!--    FOR TESTING PURPOSES ONLY
+        <div class="card-deck" id="card_deck">
+            <div class="card ">
+                <img class="card-img-top card_img" src="../img/placeholder_coral.jpeg" alt="Card image cap">
+                <div class="card-body">
+                  <h4 class="card-title">Card title</h4>
+                  <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                  <p class="card-text">
+                    Some quick example text to build on the card title
+                    and make up the bulk of the card's content.
+                  </p>
+                  <a href="#!" class="card-link">View My Listing</a>
+                  <a href="#!" class="card-link">Remove Listing</a>
+                </div>
+            </div>
+        </div>
+        <div class="card-deck" id="card_deck">
+            <div class="card ">
+                <img class="card-img-top card_img" src="../img/placeholder_coral.jpeg" alt="Card image cap">
+                <div class="card-body">
+                  <h4 class="card-title">Card title</h4>
+                  <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                  <p class="card-text">
+                    Some quick example text to build on the card title
+                    and make up the bulk of the card's content.
+                  </p>
+                  <a href="#!" class="card-link">View My Listing</a>
+                  <a href="#!" class="card-link">Remove Listing</a>
+                </div>
+            </div>
+        </div>
+        <div class="card-deck" id="card_deck">
+            <div class="card ">
+                <img class="card-img-top card_img" src="../img/placeholder_coral.jpeg" alt="Card image cap">
+                <div class="card-body">
+                  <h4 class="card-title">Card title</h4>
+                  <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                  <p class="card-text">
+                    Some quick example text to build on the card title
+                    and make up the bulk of the card's content.
+                  </p>
+                  <a href="#!" class="card-link">View My Listing</a>
+                  <a href="#!" class="card-link">Remove Listing</a>
+                </div>
+            </div>
+        </div>
+        <div class="card-deck" id="card_deck">
+            <div class="card ">
+                <img class="card-img-top card_img" src="../img/placeholder_coral.jpeg" alt="Card image cap">
+                <div class="card-body">
+                  <h4 class="card-title">Card title</h4>
+                  <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                  <p class="card-text">
+                    Some quick example text to build on the card title
+                    and make up the bulk of the card's content.
+                  </p>
+                  <a href="#!" class="card-link">View My Listing</a>
+                  <a href="#!" class="card-link">Remove Listing</a>
+                </div>
+            </div>
+        </div>
+        -->
+    </div>
+    
+
+
+   
+
+
+
+
+
+
+
+
+
+
+
+>>>>>>> 8779fd5fc55674bc5431f6364de406b52d49718a
 
     <!----------------------------------------------->
     <!-- JS: Boostrap, Firebase, API related    -->
@@ -149,7 +255,17 @@
      <!--------------------------------------------------------------------->
     <!-- Make calls to your own JavaScript functions, here below-->
     <!---------------------------------------------------------------------->
-
+    <script>
+        document.onload = getUserListings();
+        
+        /*function(){
+            firebase.auth().onAuthStateChanged(function(user) {
+                if (user) {
+                    getListings();
+                } 
+            });
+        }; */
+    </script>
 
 </body>
 </html> 
