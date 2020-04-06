@@ -36,7 +36,7 @@ function postListing() {
     let listMin = thisDate.getMinutes();
     let listMonthTranslated = translateMonth(listMonth);
 
-    let listDate = `${listMonthTranslated} ${listDay}, ${listYear} ${listHour}:${listMin}`;
+    let listDate = `${listMonthTranslated} ${listDay}, ${listYear}, ${listHour}:${listMin}`;
 
     let thisListing = {
         user: thisUser,
@@ -82,6 +82,11 @@ function postListing() {
     });
 }
 
+/**
+ * Translates the month integer into the string
+ * for that Month
+ * @param {monthNumber} num 
+ */
 function translateMonth(num) {
     switch (num) {
         case 0:
@@ -131,9 +136,12 @@ function translateMonth(num) {
  * 
  **************************/
 
-
-function getListings() {
-    let listings = [];
+/**
+ * Pulls the Listings from the DB with the
+ * user id that matches the user
+ */
+function getUserListings() {
+    let userListings = [];
 
     firebase.auth().onAuthStateChanged(function (user) {
         console.log("im in function");
@@ -141,7 +149,7 @@ function getListings() {
         .get()
         .then(function(querySnapshot) {
             querySnapshot.forEach(function(doc) {
-                listings.push(doc.data());
+                userListings.push(doc.data());
 
             }); 
         }).then(function() {
@@ -150,16 +158,25 @@ function getListings() {
                 noListingsMsg.innerHTML = "You haven't created any listings!";
                 document.getElementById(card_deck).appendChild(noListingsMsg);
             } else {
-                listings.forEach((listing) => {
+                userListings.forEach((listing) => {
                     createListingCard(listing);
                 })
             }
 
             
+        })
+        .catch((error) => {
+            console.log(`Error getting listings: ${error}`);
         });
     });
 }
 
+/**
+ * Creates the DOM elements to display the user listings
+ * in the MY_LISTINGS.html page. Displays them as cards.
+ * 
+ * @param {} listing 
+ */
 function createListingCard(listing) {
     let cardDiv = document.createElement("div");
     cardDiv.classList.add("card");
@@ -215,13 +232,97 @@ function createListingCard(listing) {
 
 
 
+/****************************
+ * BUY.HTML
+ * 
+ **************************/
+/*
+        db.collection("users/").doc(user.uid)
+            .onSnapshot(function (d) {
+            console.log("Current data: ", d.data());
+
+            if (d.get("total") != null)
+                x = d.data()["total"];
+            else
+                x = 0; // user has not added any cups yet
+            console.log(x);
+            document.getElementById("caffeinecount").innerHTML = x; 
+            }); */
+
+function getListings() {
+    let listings = [];
+
+    firebase.auth().onAuthStateChanged(function (user) {
+        console.log("im in function");
+        db.collection("listing")
+        .get()
+        .then(function(querySnapshot) {
+            querySnapshot.forEach(function(doc) {
+                listings.push(doc.data());
+
+            }); 
+        }).then(function() {
+            listings.forEach((listing) => {
+                createListingRow(listing);
+            });
+        })
+
+        .catch((error) => {
+            console.log(`Error getting listings: ${error}`);
+        });
+    });
+}
 
 
+function createListingRow(listing) {
+    let articleDiv = document.createElement("article");
+    articleDiv.classList.add("search-result");
+    articleDiv.classList.add("row");
+    articleDiv.classList.add("listing_row");
+    articleDiv.classList.add("py-3");
+    document.getElementById("listing_container").appendChild(articleDiv);
 
+    let imgDiv = document.createElement("div");
+    imgDiv.classList.add("col-lg-3");
+    articleDiv.appendChild(imgDiv);
 
+    let imgLink = document.createElement("a");
+    imgDiv.appendChild(imgLink);
 
+    let img = document.createElement("img");
+    img.src = "../img/CoralA.jpg";
+    img.alt = "A picture of coral";
+    //ADD THE HREF HERE TO POINT TO THE LISTING
+    img.innerHTML = `<a href="#" title="Results" ><img src="../img/CoralA.jpg" alt="listing1"/></a>`;
+    imgDiv.appendChild(img);
+    
 
+    let listingInfoDiv = document.createElement("div");
+    listingInfoDiv.classList.add("col-lg-9");
+    articleDiv.appendChild(listingInfoDiv);
 
+    let listingTitle = document.createElement("h4");
+    listingTitle.innerHTML = listing.title;
+    listingInfoDiv.appendChild(listingTitle);
+
+    let listingDate = document.createElement("p");
+    listingDate.classList.add("text-muted");
+    listingDate.classList.add("listing_subtext");
+    listingDate.innerHTML = `Date Posted: ${listing.date}`;
+    listingInfoDiv.appendChild(listingDate);
+
+    let listingLocation = document.createElement("p");
+    listingLocation.classList.add("text-muted");
+    listingLocation.classList.add("listing_subtext");
+    let province = listing.province;
+    listingLocation.innerHTML = `Location: ${listing.city}, ${province.toUpperCase()}`;
+    listingInfoDiv.appendChild(listingLocation);
+
+    let listingDescription = document.createElement("p");
+    listingDescription.innerHTML = listing.description;
+    listingInfoDiv.appendChild(listingDescription);
+
+}
 
 
 

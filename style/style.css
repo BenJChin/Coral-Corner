@@ -65,3 +65,26 @@ My Listings
     width: 10em;
     height: 10em;
 }
+
+/*********************************************
+Buy.HTML
+
+***********************************************/
+
+.listing_row {
+    border: 2px solid black;
+    margin-bottom: 5px;
+}
+
+.listing_subtext {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    font-size: 12px;
+}
+
+
+
+
+
+
+
