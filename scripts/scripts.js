@@ -466,6 +466,28 @@ function updateContactSellerButton(elementID, userID) {
     elementID.href = `./sendMessage.html?${userID}`;
 }
 
+function checkIfLister() {
+    firebase.auth().onAuthStateChanged(function (user) {
+        
+        db.collection("listing").doc(userID)
+        .get()
+        .then(function(doc) {
+            let listingData = doc.data();
+            let listingID = doc.id;
+            let contactSellerButton = document.getElementById("listing_contact_button");
+
+            createListingPage(listingData);
+            updateContactSellerButton(contactSellerButton, listingID);
+
+            
+        })
+        .catch((error) => {
+            console.log(`Error getting listings: ${error}`);
+        });
+    });
+}
+}
+
 /****************************
  * SEND MESSAGE.HTML
  * 
@@ -489,7 +511,7 @@ function getListingData(listerID) {
         })
         .catch((error) => {
             console.log(`Error getting listings: ${error}`);
-        });
+        }); 
     });
 }
 
