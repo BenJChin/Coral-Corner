@@ -561,7 +561,7 @@ function sendMessage(listerID) {
                 })
                 .then(function() {
                     //THIS NEEDS TO BE CHANGED TO A SENT MESSAGE .HTML
-                    window.location.href = "./main.html";
+                    window.location.href = "./sentConfirmation.html";
                 });
             });
         })
