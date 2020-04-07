@@ -27,7 +27,7 @@ function postListing() {
             listFragType = fragRadio[i].value;
         }
     }
-    let listCity = document.getElementById("city").value;
+    let listCity = document.getElementById("city").value.toLowerCase();
     let listProv = document.getElementById("province").value;
     let listDescription = document.getElementById("description").value;
     let thisUser = firebase.auth().currentUser.uid;
@@ -241,33 +241,98 @@ function createListingCard(listing) {
  */
 function getListings() {
     let listings = [];
-    let thisDocID;
+    let userData;
+    let visibleListings = [];
+    //MAKE A FUNCTION THAT SORTS THE LISTINGS SOMEHOW
 
+    //check USER location
+    //match listings to USER location
+    //sort using COMPARE ???
     firebase.auth().onAuthStateChanged(function (user) {
-        db.collection("listing")
+        db.collection("users").doc(user.uid)
         .get()
-        .then(function(querySnapshot) {
-            querySnapshot.forEach(function(doc) {
-                let listingData = doc.data();
-                listingData.id = doc.id;
-                listings.push(listingData);
-            }); 
-        }).then(function() {
-
-
-            listings.forEach((listing) => {
-                if (listing.visible == true) {
-                    createListingRow(listing);
-                }
-                
-            });
+        .then(function(doc) {
+            userData = doc.data();
         })
+        .then(function() {
+            db.collection("listing")
+            .get()
+            .then(function(querySnapshot) {
+                querySnapshot.forEach(function(doc) {
+                    let listingData = doc.data();
+                    listingData.id = doc.id;
+                    listings.push(listingData);
+                }); 
+            })
+            .then(function() {
 
+                //this is the LISTINGS array already
+                listings.forEach((listing) => {
+                    let thisListingValues = Object.values(listing);
+
+                    
+                    console.log(userData.city)
+                    console.log(thisListingValues.includes(userData.city));
+
+                    if (listing.visible == true) {
+                        if(thisListingValues.includes(userData.city) || thisListingValues.includes(userData.province)) {
+                            visibleListings.push(listing);
+                            createListingRow(listing);
+                        }
+                    }
+
+                });
+
+                if (visibleListings.length == 0) {
+                    let noListingsMsg = document.createElement("p");
+                    noListingsMsg.innerHTML = "There don't appear to be any listings in your province. Expand search?";
+                    noListingsMsg.setAttribute("id", "no_listing_msg");
+                    document.getElementById("listing_container").appendChild(noListingsMsg);
+
+                    let expandListingsButton = document.createElement("button");
+                    expandListingsButton.name = "expandListingsButton";
+                    expandListingsButton.classList.add("btn");
+                    expandListingsButton.classList.add("btn-primary");
+                    expandListingsButton.innerHTML = "Expand Search";
+                    expandListingsButton.onclick = function() {
+                        listings.forEach((listing) => {
+                            if (listing.visible == true) {
+                                createListingRow(listing);
+                            }
+                        })
+                        document.getElementsByName("expandListingsButton")
+                        .forEach((button) => {
+                            button.style.display = "none";
+                        })
+
+                        document.getElementById("no_listing_msg").style.display = "none";
+                        
+
+
+                    }
+                    document.getElementById("listing_container").appendChild(expandListingsButton);
+
+
+                }
+
+
+                
+            })
+            .catch((error) => {
+                console.log(`Error getting listings: ${error}`);
+            });
+
+        })
+        
+        
         .catch((error) => {
             console.log(`Error getting listings: ${error}`);
         });
     });
 }
+
+
+
 
 
 /**
@@ -837,3 +902,7 @@ function editProfileButtonHandler() {
     });
 }
 
+function capitalize(word) {
+    let capitalizedWord = word[0].toUpperCase() + word.slice(1);
+    return capitalizedWord;
+}
