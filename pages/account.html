@@ -77,24 +77,24 @@
     </nav>
 
     <div class="container d-flex justify-content-center">
-        <div class="container">
-            <h2>Hello, USER!</h2>
+        <div>
+            <h2>Hello, <span id="title_user_name"></span></h2>
             <h3>My Profile</h3>
             <img class="profile_picture" src="../img/happyface.jpg" alt="a placeholder happy face">
 
             <div class="container">
-                <p>Name: </p>
-                <p>Email: </p>
-                <p>A short description of you: </p>
+                <p><b>Name: </b><span id="profile_name"></span></p>
+                <p><b>Email: </b><span id="profile_email"></span></p>
+                <p><b>Location: </b><span id="profile_city"></span>, <span id="profile_province"></span></p>
+                <hr>
+                <p class=text-muted>A short description of you: </p>
+                <p id="profile_description"></p>
             </div>
             <br>
-            <button class="btn-primary">Edit Profile</button>
+            <a href="./editProfile.html"><button class="btn-primary">Edit Profile</button></a> 
             <a href="./inbox.html"><button class="btn-primary">Check Inbox</button></a> 
             <a href="./myListings.html"><button class="btn-primary">View My Listings</button></a> 
         </div>
-
-
-
     </div>
     
 
@@ -124,6 +124,9 @@
     <!-- JS files: Your own JavaScript functions included here    -->
     <!--------------------------------------------------------------------->
     <script src="../scripts/scripts.js"></script>
+    <script>
+        getAccountInfo();
+    </script>
 
      <!--------------------------------------------------------------------->
     <!-- Make calls to your own JavaScript functions, here below-->

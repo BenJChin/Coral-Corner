@@ -123,6 +123,7 @@ function translateMonth(num) {
 }
 
 /****************************
+ * 
  * myListings.HTML
  * 
  **************************/
@@ -140,7 +141,10 @@ function getUserListings() {
         .get()
         .then(function(querySnapshot) {
             querySnapshot.forEach(function(doc) {
-                userListings.push(doc.data());
+                let thisListingID = doc.id;
+                let thisData = doc.data();
+                thisData.docID = thisListingID;
+                userListings.push(thisData);
 
             }); 
         }).then(function() {
@@ -161,6 +165,8 @@ function getUserListings() {
         });
     });
 }
+
+
 
 /**
  * Creates the DOM elements to display the user listings
@@ -210,7 +216,7 @@ function createListingCard(listing) {
 
     let viewListingLink = document.createElement("a");
     viewListingLink.classList.add("card-link");
-    viewListingLink.href = "#!";
+    viewListingLink.href = `./listing.html?${listing.docID}`;
     viewListingLink.innerHTML = "View";
     cardSmall.appendChild(viewListingLink);
 
@@ -484,11 +490,22 @@ function updateContactSellerButton(elementID, listingID, listerID, userID) {
  * SEND MESSAGE.HTML
  * 
  **************************/
-
+/**
+ * Function called on page load of sendMessage.html to retrieve the
+ * message.
+ */
 function sendMessageHandler() {
     sendMessage(parseURL());
 }
 
+/**
+ * Gets the listing data from the original listing. Populates
+ * the listing_title element with that data. Currently doesn't
+ * do anything else with the listing data.
+ * @param {OBJ} listerID 
+ *          the listing document ID pulled from the URL when
+ *          it was passed on from listings page
+ */
 function getListingData(listerID) {
     firebase.auth().onAuthStateChanged(function (user) {
         
@@ -506,7 +523,12 @@ function getListingData(listerID) {
     });
 }
 
-
+/**
+ * Grabs the form data from the message page and sends
+ * it to the DB. 
+ * @param {OBJ} listerID 
+ *          the listing document ID from the URL ? section
+ */
 
 function sendMessage(listerID) {
     let listingUserID;
@@ -574,6 +596,10 @@ function sendMessage(listerID) {
  * INBOX.HTML
  * 
  **************************/
+/**
+ * Queries DB for messages that have the same "receiver" id as the
+ * currently logged in user id and calls createInboxMessage to populate the DOM with them.
+ */
 function populateInbox() {
     
     let userMessages = [];
@@ -628,6 +654,17 @@ function populateInbox() {
     });
 }
 
+/**
+ * Creates the indivdual message DOM elements in the list from the
+ * data pulled from DB.
+ * 
+ * @param {*} message 
+ *              the message object from DB
+ * @param {*} msgSenderName 
+ *              the string plaintext name of the sender
+ * @param {*} messageID 
+ *              the message doc id
+ */
 function createInboxMessage(message, msgSenderName, messageID) {
     let senderID = message.sender;
     let senderName = msgSenderName;
@@ -656,7 +693,6 @@ function createInboxMessage(message, msgSenderName, messageID) {
     dateLink.innerHTML = message.subject;
     dateSent.appendChild(dateLink);
     tableRow.appendChild(dateSent);
-
 }
 
 
@@ -664,7 +700,11 @@ function createInboxMessage(message, msgSenderName, messageID) {
  * ViewMessage.HTML
  * 
  **************************/
-
+/**
+ * Queries the DB for the specific message (message doc ID that's passed on from
+ * the previous page) and populates the DOM with that message
+ * @param {*} messageID 
+ */
 function getMessage(messageID) {
     let messageData;
     firebase.auth().onAuthStateChanged(function (user) {
@@ -696,15 +736,104 @@ function getMessage(messageID) {
     });
 }
 
+/**
+ * Edits the reply button to include the listing ID and sends
+ * user to the sendMessage page with that data.
+ * MAYBE MAYBE SEND MESSAGE INFO TOO
+ * @param {} listingID 
+ */
 function changeReplyButton(listingID) {
     let replyButton = document.getElementById("view_message_reply_button");
     replyButton.href = `./sendMessage.html?${listingID}`;
 }
 
 
+/****************************
+ * Account.HTML
+ * 
+ **************************/
+function getAccountInfo() {
+    firebase.auth().onAuthStateChanged(function (user) {
+        
+        db.collection("users").doc(user.uid)
+        .get()
+        .then(function(data) {
+            let userData = data.data();
+            fillAccountInfo(userData);
+        })
+        
+        .catch((error) => {
+            console.log(`Error getting data: ${error}`);
+        });
+    });
+}
+
+function fillAccountInfo(account) {
+    document.getElementById("title_user_name").innerHTML = account.name;
+    document.getElementById("profile_name").innerHTML = account.name;
+    document.getElementById("profile_email").innerHTML = account.email;
+    document.getElementById("profile_description").innerHTML = account.description;
+    document.getElementById("profile_city").innerHTML = account.city;
+    document.getElementById("profile_province").innerHTML = account.province.toUpperCase();
+}
+
+/****************************
+ * editProfile.HTML
+ * 
+ **************************/
+
+function editProfileGetAccountInfo() {
+    firebase.auth().onAuthStateChanged(function (user) {
+        
+        db.collection("users").doc(user.uid)
+        .get()
+        .then(function(data) {
+            let userData = data.data();
+            fillPlaceholderData(userData);
+        })
+        
+        .catch((error) => {
+            console.log(`Error getting data: ${error}`);
+        });
+    });
+}
+
+function fillPlaceholderData(account) {
+    document.getElementById("edit_name").value = account.name;
+    document.getElementById("edit_email").value = account.email;
+    document.getElementById("edit_city").value = account.city;
+    document.getElementById("edit_province").value = account.province;
+    document.getElementById("edit_profile_description").value = account.description;
+
+}
 
 
+function editProfileButtonHandler() {
+    let editName = document.getElementById("edit_name").value;
+    let editEmail = document.getElementById("edit_email").value;
+    let editCity = document.getElementById("edit_city").value;
+    let editProvince = document.getElementById("edit_province").value;
+    let editDescription = document.getElementById("edit_profile_description").value;
 
+    let profileInfo = {
+        name: editName,
+        email: editEmail,
+        city: editCity,
+        province: editProvince,
+        description: editDescription
+    }
 
-
+    firebase.auth().onAuthStateChanged(function (user) {
+        db.collection("users").doc(user.uid).update(profileInfo)
+        .then(function(){
+            console.log(`profile updated!`);
+        })
+        .catch(function(error){
+            console.log(`error updating: ${error}`);
+        })
+        .then(function() {
+            window.location.href = "./account.html";
+        });
+    });
+}
 
