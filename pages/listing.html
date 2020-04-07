@@ -21,79 +21,144 @@
         <!------------------------>
         <!-- Your own CSS files -->
         <!------------------------>
-        <link rel="stylesheet" href="styles/style.css">
+        <link href="https://fonts.googleapis.com/css?family=Kaushan+Script&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="../style/style.css">
 
     </head>
     <body>
         
-        <nav class="navbar navbar-expand-lg navbar-light bg-light ">
-            <a class="navbar-brand" href="./index.html">
-                <img src="../img/icons/coral-reef.png" width="30" height="30" alt="a small icon picture of coral">
-            </a>
-            <a class="navbar-brand mr-auto nav-bar-text" href="./index.html">The Coral Corner</a>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light ">
+        <a class="navbar-brand" href="./main.html">
+            <img src="../img/icons/coral-reef.png" width="30" height="30" alt="a small icon picture of coral">
+        </a>
+        <a class="navbar-brand mr-auto nav-bar-text" href="./main.html">The Coral Corner</a>
+    
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+    
+        <div class="collapse navbar-collapse ml-auto" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item ml-auto">
+                    <form class="form-inline px-1">
+                        <a href="./buy.html">
+                            <button class="btn nav-button" type="button"><img src="../img/icons/browser.png" alt="an icon of a browser" height="30" width="30"> </button>
+                        </a>
+                    </form>
+                </li>
+                <li class="nav-item ml-auto">
+                    <form class="form-inline px-1">
+                        <a href="./sell.html">
+                            <button class="btn nav-button" type="button"><img src="../img/icons/exchange.png" alt="an icon of a dollar sign" height="30" width="30"> </button>
+                        </a>
+                    </form>
+                </li>
+                <li class="nav-item ml-auto">
+                    <form class="form-inline px-1">
+                        <a href="./wiki.html">
+                            <button class="btn nav-button" type="button"><img src="../img/icons/notebook.png" alt="an icon of a notebook" height="30" width="30"></button>
+                        </a>
+                    </form>
+                </li>
+                <li class="nav-item ml-auto">
+                    <form class="form-inline px-1">
+                        <a href="./account.html">
+                            <button class="btn nav-button" type="button" >My Account</button>
+                        </a>
+                    </form>
+                </li>  
+            </ul>
+        </div>
+    </nav>
+
+
+    <div class="input-group">
+        <input type="text" class="form-control" placeholder="Search...">
+        <div class="input-group-append">
+            <button type="button" class="btn btn-secondary">
+                <i class="fa fa-search"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="container" id="listing_insertion">
+        <!-- Used for initial styling and positioning
+        <div class="container">
+            <h1>Title of coral</h1>
+            <p class="text-muted listing_subtext">Date Posted:</p>
+            <p class="text-muted listing_subtext">Location:</p>
+        </div>
+    
         
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-              </button>
-            
-            <div class="collapse navbar-collapse ml-auto" id="navbarSupportedContent">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item ml-auto">
-                        <form class="form-inline px-1">
-                            <a href="">
-                                <button class="btn nav-button" type="button"><img src="../img/icons/browser.png" alt="an icon of a browser" height="30" width="30"> </button>
-                            </a>
-                        </form>
-                    </li>
-                    <li class="nav-item ml-auto">
-                        <form class="form-inline px-1">
-                            <a href="">
-                                <button class="btn nav-button" type="button"><img src="../img/icons/exchange.png" alt="an icon of a dollar sign" height="30" width="30"> </button>
-                            </a>
-                        </form>
-                    </li>
-                    <li class="nav-item ml-auto">
-                        <form class="form-inline px-1">
-                            <a href="">
-                                <button class="btn nav-button" type="button"><img src="../img/icons/notebook.png" alt="an icon of a notebook" height="30" width="30"></button>
-                            </a>
-                        </form>
-                    </li>
-                    <li class="nav-item ml-auto">
-                        <form class="form-inline px-1">
-                            <a href="">
-                                <button class="btn nav-button" type="button" >My Account</button>
-                            </a>
-                        </form>
-                    </li>  
-                </ul>
-            </div>
-        </nav>
 
 
-        <div class="input-group">
-            <input type="text" class="form-control" placeholder="Search...">
-            <div class="input-group-append">
-                <button type="button" class="btn btn-secondary">
-                    <i class="fa fa-search"></i>
-                </button>
+        
+        <div class="container py-3">
+            <div class="row">
+                <div class="col-md-6 py-1">
+                    <img src="../img/coral.jpg" alt="Sample Coral" class="img-fluid">
+                </div>
+                <div class="col-md-6 py-1">
+                    <div class="py-2">
+                        <h5>Species:</h5> 
+                        <p class="inline_listing_text">What does this look like</p>
+                    </div>
+                    
+                    <div class="py-2">
+                        <h5>Size of Coral:</h5>
+                        <p class="inline_listing_text">What does this look like</p>
+                    </div>
+                    
+                    <div class="py-2">
+                        <h5>Description</h5>
+                        <p class="inline_listing_text">What does this look like</p>
+                    </div>
+                    
+                    <h5>Cost:$x.00</h5>
+                </div>  
             </div>
         </div>
+        -->
+    </div>
 
-        <h1>Title of coral</h1>
-        <div class="box text-center">
-            <img src="../img/coral.jpg" alt="Sample Coral">
-        </div>
-        <div>
-            <h4>Description</h4>
-            <h4>Description</h4>
-            <h4>Description</h4>
-            <h4>Cost: x.00$</h4>
-        </div>
+    
 
-        <div>
-            <button type="button" class="btn btn-primary btn-lg">Contact Seller</button>
-        </div>
+    <div class="container py-3 d-flex justify-content-center">
+        <a href="" id="listing_contact_button"><button type="button" class="btn btn-primary btn-lg" >Contact Seller</button></a> 
+    </div>
+    
+    
+    
+
+
+
+    <!----------------------------------------------->
+    <!-- JS: Boostrap, Firebase, other API's    -->
+    <!----------------------------------------------->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
+    </script>
+
+    <script src="https://www.gstatic.com/firebasejs/7.9.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.9.2/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.9.2/firebase-firestore.js"></script>
+    <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.10.0/firebase-analytics.js"></script>
+    <script src="../scripts/firebase_api_coral.js"> </script>
+
+    <!----------------------------------------------->
+    <!-- JS files: Your own JavaScripts go here    -->
+    <!----------------------------------------------->
+    <script src="../scripts/scripts.js"></script>
+    <script>
+        getSpecificListing(parseURL());
+    </script>
         
     </body>
 </html>
