@@ -1,5 +1,77 @@
 
+/****************************
+ * HELPER METHODS THAT ARE USEFUL BETWEEN ALL PAGES
+ * 
+ **************************/
+/**
+ * Capitalizes the first letter of the word. Useful for
+ * displaying CITY strings from DB, since it's saved as all lower case
+ * @param {string} word 
+ */
+function capitalize(word) {
+    let capitalizedWord = word[0].toUpperCase() + word.slice(1);
+    return capitalizedWord;
+}
 
+/**
+ * Translates the month integer into the string
+ * for that Month
+ * @param {monthNumber} num 
+ */
+function translateMonth(num) {
+    switch (num) {
+        case 0:
+            return "January";
+            break;
+        case 1:
+            return "February";
+            break;
+        case 2:
+            return "March";
+            break;
+        case 3:
+            return "April";
+            break;
+        case 4:
+            return "May";
+            break;
+        case 5:
+            return "June";
+            break;
+        case 6:
+            return "July";
+            break;
+        case 7:
+            return "August";
+            break;
+        case 8:
+            return "September";
+            break;
+        case 9:
+            return "October";
+            break;
+        case 10:
+            return "November";
+            break;
+        case 11:
+            return "December";
+            break;
+        default:
+            return;
+            break;
+    }
+}
+
+/**
+ * Pulls the value after "?" in the HTML. Used to pass values
+ * between pages. Only returns the first value.
+ */
+function parseURL() {
+    let queryString = decodeURIComponent(window.location.search)
+    let queries = queryString.split("?");
+    let userID = queries[1];
+    return userID;
+}
 
 /*****************
  * SELL.HTML
@@ -73,54 +145,7 @@ function postListing() {
     });
 }
 
-/**
- * Translates the month integer into the string
- * for that Month
- * @param {monthNumber} num 
- */
-function translateMonth(num) {
-    switch (num) {
-        case 0:
-            return "January";
-            break;
-        case 1:
-            return "February";
-            break;
-        case 2:
-            return "March";
-            break;
-        case 3:
-            return "April";
-            break;
-        case 4:
-            return "May";
-            break;
-        case 5:
-            return "June";
-            break;
-        case 6:
-            return "July";
-            break;
-        case 7:
-            return "August";
-            break;
-        case 8:
-            return "September";
-            break;
-        case 9:
-            return "October";
-            break;
-        case 10:
-            return "November";
-            break;
-        case 11:
-            return "December";
-            break;
-        default:
-            return;
-            break;
-    }
-}
+
 
 /****************************
  * 
@@ -151,10 +176,13 @@ function getUserListings() {
             if (userListings.length == 0) {
                 let noListingsMsg = document.createElement("p");
                 noListingsMsg.innerHTML = "You haven't created any listings!";
-                document.getElementById(card_deck).appendChild(noListingsMsg);
+                document.getElementById("card_deck").appendChild(noListingsMsg);
             } else {
                 userListings.forEach((listing) => {
-                    createListingCard(listing);
+                    if(listing.visible == true) {
+                        createListingCard(listing);
+                    }
+                    
                 })
             }
 
@@ -243,11 +271,7 @@ function getListings() {
     let listings = [];
     let userData;
     let visibleListings = [];
-    //MAKE A FUNCTION THAT SORTS THE LISTINGS SOMEHOW
-
-    //check USER location
-    //match listings to USER location
-    //sort using COMPARE ???
+    
     firebase.auth().onAuthStateChanged(function (user) {
         db.collection("users").doc(user.uid)
         .get()
@@ -266,7 +290,7 @@ function getListings() {
             })
             .then(function() {
 
-                //this is the LISTINGS array already
+                //Populate Listings Array with Listing Data
                 listings.forEach((listing) => {
                     let thisListingValues = Object.values(listing);
 
@@ -283,56 +307,71 @@ function getListings() {
 
                 });
 
-                if (visibleListings.length == 0) {
-                    let noListingsMsg = document.createElement("p");
-                    noListingsMsg.innerHTML = "There don't appear to be any listings in your province. Expand search?";
-                    noListingsMsg.setAttribute("id", "no_listing_msg");
-                    document.getElementById("listing_container").appendChild(noListingsMsg);
+                //Create the expand search button
+                let expandListingsButton = document.createElement("button");
+                expandListingsButton.classList.add("btn");
+                expandListingsButton.classList.add('btn-primary');
+                expandListingsButton.setAttribute("id", "expand_listing_button");
+                expandListingsButton.innerHTML = "Expand Listings";
+                expandListingsButton.onclick = function() {
+                    listings.forEach((listing) => {
+                        if (listing.visible == true) {
+                            createListingRow(listing);
+                        }
+                    })
 
-                    let expandListingsButton = document.createElement("button");
-                    expandListingsButton.name = "expandListingsButton";
-                    expandListingsButton.classList.add("btn");
-                    expandListingsButton.classList.add("btn-primary");
-                    expandListingsButton.innerHTML = "Expand Search";
-                    expandListingsButton.onclick = function() {
-                        listings.forEach((listing) => {
-                            if (listing.visible == true) {
-                                createListingRow(listing);
-                            }
-                        })
-                        document.getElementsByName("expandListingsButton")
-                        .forEach((button) => {
-                            button.style.display = "none";
-                        })
-
-                        document.getElementById("no_listing_msg").style.display = "none";
-                        
-
-
-                    }
-                    document.getElementById("listing_container").appendChild(expandListingsButton);
-
+                    document.getElementById("no_listing_msg").style.display = "none";
+                    expandListingsButton.style.display = "none";
 
                 }
+                document.getElementById("expand_listings_container").appendChild(expandListingsButton);
 
+                /**
+                 * Checks if user has not set CITY or PROVINCE location data yet. If they have
+                 * and there are still no visible listings, then give option to expand listings to
+                 * all provinces / cities
+                 */
+                if (visibleListings.length == 0) {
+                    if (userData.city == undefined || userData.province == undefined) {
+                        let accountButtonContainer = document.getElementById("go_to_account_button_container");
 
-                
+                        let noListingsMsg = document.createElement("p");
+                        noListingsMsg.innerHTML = "You don't seem to have a location set. Check your account page and set a location!";
+                        noListingsMsg.setAttribute("id", "no_listing_msg");
+                        document.getElementById("listing_container").insertBefore(noListingsMsg, accountButtonContainer );
+
+                        let goToAccountButton = document.createElement("button");
+                        goToAccountButton.classList.add("btn");
+                        goToAccountButton.classList.add('btn-primary');
+                        goToAccountButton.setAttribute("id", "go_to_account_button");
+                        goToAccountButton.innerHTML = "Go to My Account";
+                        goToAccountButton.onclick = function() {
+                            window.location.href = "./account.html";
+                        }
+                        document.getElementById("go_to_account_button_container").appendChild(goToAccountButton);
+
+                    } else {
+                        let noListingsMsg = document.createElement("p");
+                        noListingsMsg.innerHTML = "There don't appear to be any listings in your province. Expand search?";
+                        noListingsMsg.setAttribute("id", "no_listing_msg");
+
+                        let accountButtonContainer = document.getElementById("go_to_account_button_container");
+                        document.getElementById("listing_container").insertBefore(noListingsMsg, accountButtonContainer );
+
+                    }
+
+                }  
             })
             .catch((error) => {
                 console.log(`Error getting listings: ${error}`);
             });
 
         })
-        
-        
         .catch((error) => {
             console.log(`Error getting listings: ${error}`);
         });
     });
 }
-
-
-
 
 
 /**
@@ -386,7 +425,7 @@ function createListingRow(listing) {
     listingLocation.classList.add("text-muted");
     listingLocation.classList.add("listing_subtext");
     let province = listing.province;
-    listingLocation.innerHTML = `Location: ${listing.city}, ${province.toUpperCase()}`;
+    listingLocation.innerHTML = `Location: ${capitalize(listing.city)}, ${province.toUpperCase()}`;
     listingInfoDiv.appendChild(listingLocation);
 
     let listingDescription = document.createElement("p");
@@ -402,16 +441,7 @@ function createListingRow(listing) {
  * LISTING.HTML
  * 
  **************************/
-/**
- * Pulls the value after "?" in the HTML. Used to pass values
- * between pages
- */
-function parseURL() {
-    let queryString = decodeURIComponent(window.location.search)
-    let queries = queryString.split("?");
-    let userID = queries[1];
-    return userID;
-}
+
 /**
  * Gets the specific listing from the DB using the listing ID in the HTML after 
  * the query string "?". 
@@ -460,7 +490,7 @@ function createListingPage(listing) {
     let locationText = document.createElement("p");
     locationText.classList.add("text-muted");
     locationText.classList.add("listing_subtext")
-    locationText.innerHTML = `Location: ${listing.city}, ${listing.province.toUpperCase()}`;
+    locationText.innerHTML = `Location: ${capitalize(listing.city)}, ${listing.province.toUpperCase()}`;
     titleContainer.appendChild(locationText);
 
     let listingTextContainer = document.createElement("div");
@@ -497,7 +527,7 @@ function createListingPage(listing) {
     speciesContainer.appendChild(speciesTitle);
 
     let species = document.createElement("p");
-    species.innerHTML = listing.species;
+    species.innerHTML = capitalize(listing.species);
     speciesContainer.appendChild(species);
 
     let fragContainer = document.createElement("div");
@@ -509,7 +539,7 @@ function createListingPage(listing) {
     fragContainer.appendChild(fragTitle);
 
     let frag = document.createElement("p");
-    frag.innerHTML = listing.fragType;
+    frag.innerHTML = convertFragData(listing.fragType);
     fragContainer.appendChild(frag);
 
     //awful variable name
@@ -528,6 +558,22 @@ function createListingPage(listing) {
     let cost = document.createElement("h5");
     cost.innerHTML = `Cost: ${listing.cost}`;
 }
+
+function convertFragData(fragType) {
+    switch (fragType) {
+        case "frag_size":
+            return "Fragment";
+            break;
+        case "reg_size":
+            return "Full coral size";
+            break;
+        default:
+            return "Unspecified";
+    }
+}
+
+
+
 /**
  * Checks if the user browsing the page is the same user who made the listing. If 
  * true, changes the button to navigate back to myListing. Otherwise, user can
@@ -817,6 +863,11 @@ function changeReplyButton(listingID) {
  * Account.HTML
  * 
  **************************/
+
+ /**
+  * Calls the DB to get the user info. Then calls
+  * the fillAccountInfo function to populate the DOM
+  */
 function getAccountInfo() {
     firebase.auth().onAuthStateChanged(function (user) {
         
@@ -833,6 +884,10 @@ function getAccountInfo() {
     });
 }
 
+/**
+ * Fills the DOM information with the user information from database
+ * @param {user} account 
+ */
 function fillAccountInfo(account) {
     document.getElementById("title_user_name").innerHTML = account.name;
     document.getElementById("profile_name").innerHTML = account.name;
@@ -842,11 +897,29 @@ function fillAccountInfo(account) {
     document.getElementById("profile_province").innerHTML = account.province.toUpperCase();
 }
 
+/**
+ * Logout functionality tied to the button
+ */
+function logout() {
+    firebase.auth().signOut()
+    .then(function() {
+        console.log("Signout successful");
+        window.location.href = "../index.html";
+      })
+    .catch(function(error) {
+        console.log(`Error: ${error}`);
+    });
+}
+
 /****************************
  * editProfile.HTML
  * 
  **************************/
-
+/**
+ * Initial call to the database to get the user info.
+ * Sets that userinfo as the default data if it exists, so user
+ * doesn't have to type as much when updating.
+ */
 function editProfileGetAccountInfo() {
     firebase.auth().onAuthStateChanged(function (user) {
         
@@ -863,6 +936,10 @@ function editProfileGetAccountInfo() {
     });
 }
 
+/**
+ * Fills the form with information from the user account if it exists
+ * @param {user} account 
+ */
 function fillPlaceholderData(account) {
     document.getElementById("edit_name").value = account.name;
     document.getElementById("edit_email").value = account.email;
@@ -872,7 +949,10 @@ function fillPlaceholderData(account) {
 
 }
 
-
+/**
+ * The function called when the edit button is submitted. Takes
+ * the form info and updates USER info in DB
+ */
 function editProfileButtonHandler() {
     let editName = document.getElementById("edit_name").value;
     let editEmail = document.getElementById("edit_email").value;
@@ -902,7 +982,6 @@ function editProfileButtonHandler() {
     });
 }
 
-function capitalize(word) {
-    let capitalizedWord = word[0].toUpperCase() + word.slice(1);
-    return capitalizedWord;
-}
+
+
+
