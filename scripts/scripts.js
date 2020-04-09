@@ -267,7 +267,7 @@ function getListings() {
                 }); 
             })
             .then(function() {
-                document.getElementById("load_spinner").style.display = "none";
+                
                 //Populate Listings Array with Listing Data
                 listings.forEach((listing) => {
                     let thisListingValues = Object.values(listing);
@@ -341,7 +341,9 @@ function getListings() {
 
                     }
 
-                }  
+                }
+                
+                document.getElementById("load_spinner").style.display = "none";
             })
             .catch((error) => {
                 console.log(`Error getting listings: ${error}`);
@@ -471,10 +473,11 @@ function getSpecificListing(userID) {
             let listingListerID = listingData.user;
             let contactSellerButton = document.getElementById("listing_contact_button");
 
-            document.getElementById("load_spinner").style.display = "none";
+            
 
             createListingPage(listingData);
             updateContactSellerButton(contactSellerButton, listingID, listingListerID, user.uid);
+            document.getElementById("load_spinner").style.display = "none";
         })
         .catch((error) => {
             console.log(`Error getting listings: ${error}`);
@@ -576,7 +579,8 @@ function createListingPage(listing) {
     userDescriptionContainer.appendChild(description);
 
     let cost = document.createElement("h5");
-    cost.innerHTML = `Cost: ${listing.cost}`;
+    cost.innerHTML = `Cost: $${listing.price}`;
+    userDescriptionContainer.appendChild(cost);
 }
 
 
@@ -813,7 +817,7 @@ function createInboxMessage(message, msgSenderName, messageID) {
     let dateSent = document.createElement("td");
     let dateLink = document.createElement("a");
     dateLink.href = `./viewMessage.html?${inboxMessageID}`;
-    dateLink.innerHTML = message.subject;
+    dateLink.innerHTML = message.date;
     dateSent.appendChild(dateLink);
     tableRow.appendChild(dateSent);
 }
@@ -842,7 +846,7 @@ function getMessage(messageID) {
             db.collection("users").doc(messageData.sender)
         .get()
         .then(function(user) {
-            document.getElementById("load_spinner").style.display = "none";
+            
             userData = user.data();
             userName = userData.name;
 
@@ -852,6 +856,7 @@ function getMessage(messageID) {
             document.getElementById("view_message_listing").innerHTML = messageData.listingTitle;
 
             changeReplyButton(messageData.listingID);
+            document.getElementById("load_spinner").style.display = "none";
         })
         })
         .catch((error) => {
@@ -887,9 +892,10 @@ function getAccountInfo() {
         db.collection("users").doc(user.uid)
         .get()
         .then(function(data) {
-            document.getElementById("load_spinner").style.display = "none";
+            
             let userData = data.data();
             fillAccountInfo(userData);
+            document.getElementById("load_spinner").style.display = "none";
 
         })
         
@@ -959,8 +965,9 @@ function editProfileGetAccountInfo() {
         .get()
         .then(function(data) {
             let userData = data.data();
-            document.getElementById("load_spinner").style.display = "none";
+            
             fillPlaceholderData(userData);
+            document.getElementById("load_spinner").style.display = "none";
         })
         
         .catch((error) => {
