@@ -14,9 +14,12 @@ The Coral Corner is an application that helps coral collectors and enthusiasts c
 BOOTSTRAP:  
 https://getbootstrap.com/
 
+Loading Circle:  
+Spinning loading image and code: https://loading.io/css/  
 ## Database:
 FIREBASE:  
 https://firebase.google.com/  
+
 
 
 ## IMAGES USED:  
@@ -45,7 +48,7 @@ http://dedicatedaquariums.com/guide-to-keeping-euphyllia-corals/
 saltwater: 
 https://www.pinterest.ca/pin/559501953677364520/  
 FlatICONs in nav bar: https://www.flaticon.com/  
-Spinning loading image and code: https://loading.io/css/
+
 
 ## REFERENCES :  
 Acropora 
