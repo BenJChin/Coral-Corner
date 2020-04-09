@@ -1,4 +1,3 @@
-# Coral-Corner
 
 # Welcome to the Coral Corner!
 
