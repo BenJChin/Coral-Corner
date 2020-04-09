@@ -69,12 +69,12 @@ NAV BAR
 }
 
 .nav-button {
-    color: blue;
+    color: #132850;
     border: none;
 }
 
 .nav-button:hover {
-    border: solid blue;
+    border: solid #132850;
 }
 
 .nav-list {
@@ -115,11 +115,11 @@ INDEX AND MAIN
 }
 
 .index_button {
-    background-color: #6996b3;
+    background-color: #132850;
 }
 
 #index_body {
-    background-image: linear-gradient(#004c6d,#6996b3);
+    background-image: linear-gradient(#004c6d,#132850);
 }
 
 #coral_blurb_img {
@@ -131,7 +131,7 @@ INDEX AND MAIN
 }
 
 .main-button {
-    background-color: #6996b3;
+    background-color: #132850;
 }
 
 /*********************************************
@@ -232,5 +232,6 @@ input[type=number] {
 .sell_form_container {
     background-color: #E0EEEE;
     padding-top: 5px;
+    margin-top: 10px;
 }
 
