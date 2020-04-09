@@ -235,3 +235,10 @@ input[type=number] {
     margin-top: 10px;
 }
 
+/*********************************************
+viewMessage.html
+
+***********************************************/
+.view_message_body {
+    min-height: 20vh;
+}

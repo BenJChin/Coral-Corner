@@ -471,6 +471,8 @@ function getSpecificListing(userID) {
             let listingListerID = listingData.user;
             let contactSellerButton = document.getElementById("listing_contact_button");
 
+            document.getElementById("load_spinner").style.display = "none";
+
             createListingPage(listingData);
             updateContactSellerButton(contactSellerButton, listingID, listingListerID, user.uid);
         })
@@ -634,6 +636,8 @@ function getListingData(listerID) {
             //let listingUserID = listingData.user;
 
             document.getElementById("listing_title").value = listingData.title;
+
+            document.getElementById("load_spinner").style.display = "none";
         })
         .catch((error) => {
             console.log(`Error getting listings: ${error}`);
@@ -729,6 +733,7 @@ function populateInbox() {
                 let thisMessage = doc.data();
                 thisMessage.docID = doc.id;
                 userMessages.push(thisMessage);
+                document.getElementById("load_spinner").style.display = "none";
                 
             }); 
         }).then(function() {
@@ -837,6 +842,7 @@ function getMessage(messageID) {
             db.collection("users").doc(messageData.sender)
         .get()
         .then(function(user) {
+            document.getElementById("load_spinner").style.display = "none";
             userData = user.data();
             userName = userData.name;
 
@@ -881,8 +887,10 @@ function getAccountInfo() {
         db.collection("users").doc(user.uid)
         .get()
         .then(function(data) {
+            document.getElementById("load_spinner").style.display = "none";
             let userData = data.data();
             fillAccountInfo(userData);
+
         })
         
         .catch((error) => {
@@ -951,6 +959,7 @@ function editProfileGetAccountInfo() {
         .get()
         .then(function(data) {
             let userData = data.data();
+            document.getElementById("load_spinner").style.display = "none";
             fillPlaceholderData(userData);
         })
         

@@ -77,11 +77,17 @@
         <br>
 
         <div class="container py-3">
+
+        <!-- LOADING SPINNER COURTESY OF https://loading.io/css -->
+        <div class="container d-flex justify-content-center">
+        <div class="lds-ring" id="load_spinner"><div></div><div></div><div></div><div></div></div>
+        </div>
+
             <ul class="list-group">
                 <li class="list-group-item"><span class="text-muted">Listing: </span><span id="view_message_listing"></span></li>
                 <li class="list-group-item"><span class="text-muted">Sender: </span><span id="view_message_sender"></span></li>
                 <li class="list-group-item"><span class="text-muted">Subject: </span><span id="view_message_subject"></span></li>        
-                <li class="list-group-item"><span class=" text-muted">Message:</span><br><span id="view_message_body"></span></li>
+                <li class="list-group-item py-2 view_message_body"><span class=" text-muted">Message:</span><br><span id="view_message_body"></span></li>
             </ul>
         </div>
         
