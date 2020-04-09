@@ -159,7 +159,7 @@ function postListing() {
         visible: true
     }
 
-    //PUSH the listing object data into the DB
+    //WRITE the listing object data into the DB
     firebase.auth().onAuthStateChanged(function (user) {
         db.collection("listing").add(thisListing)
         .then(function(docRef){
@@ -192,7 +192,7 @@ function getUserListings() {
     let userListings = [];
     let visibleListings = [];
 
-    //DB Query to pull listing information
+    //READ from DB to pull listing information
     firebase.auth().onAuthStateChanged(function (user) {
         db.collection("listing").where("user", "==", user.uid)
         .get()
@@ -252,13 +252,14 @@ function getListings() {
     let visibleListings = [];
     let isInMyListingsPage = false;
     
-    //Query to DB to pull USERS data
+    //READ from DB to pull USERS data
     firebase.auth().onAuthStateChanged(function (user) {
         db.collection("users").doc(user.uid)
         .get()
         .then(function(doc) {
             userData = doc.data();
         })
+        //Second READ from DB to pull listing data
         .then(function() {
             db.collection("listing")
             .get()
@@ -467,7 +468,7 @@ function createListingRow(listing, addUserButtons) {
  * @param {*} userID 
  */
 function getSpecificListing(userID) {
-    //QUERY for listings data
+    //READ from DB for listings data
     firebase.auth().onAuthStateChanged(function (user) {
         db.collection("listing").doc(userID)
         .get()
@@ -623,6 +624,7 @@ function sendMessageHandler() {
  *          it was passed on from listings page
  */
 function getListingData(listerID) {
+    //READ database to get the listings data that matches the user
     firebase.auth().onAuthStateChanged(function () { 
         db.collection("listing").doc(listerID)
         .get()
@@ -648,7 +650,7 @@ function sendMessage(listerID) {
     let listingUserID;
     let listingData;
     let thisListingID;
-    //QUERY database for listing data
+    //READ database for listing data matching the lister ID
     db.collection("listing").doc(listerID)
         .get()
         .then(function(doc) {
@@ -804,7 +806,7 @@ function createInboxMessage(message, msgSenderName, messageID) {
  */
 function getMessage(messageID) {
     let messageData;
-    //Database query to get the specific message from the doc ID
+    //Database READ to get the specific message from the doc ID
     firebase.auth().onAuthStateChanged(function () {
         db.collection("messages").doc(messageID)
         .get()
@@ -853,7 +855,7 @@ function changeReplyButton(listingID) {
   * the fillAccountInfo function to populate the DOM
   */
 function getAccountInfo() {
-    //QUERY database to get the user information to display
+    //READ database to get the user information to display
     firebase.auth().onAuthStateChanged(function (user) {
         db.collection("users").doc(user.uid)
         .get()
@@ -921,7 +923,7 @@ function logout() {
  * doesn't have to type as much when updating.
  */
 function editProfileGetAccountInfo() {
-    //Query to get the user information of the user
+    //READ DB to get the user information of the user
     firebase.auth().onAuthStateChanged(function (user) {    
         db.collection("users").doc(user.uid)
         .get()
@@ -967,7 +969,7 @@ function editProfileButtonHandler() {
         description: editDescription
     }
 
-    //DB update; Update the user information with the
+    //DB UPDATE; Update the user information with the
     //profile information object
     firebase.auth().onAuthStateChanged(function (user) {
         db.collection("users").doc(user.uid).update(profileInfo)
