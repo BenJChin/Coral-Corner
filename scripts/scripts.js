@@ -113,7 +113,7 @@ function convertFragData(fragType) {
  ******************/
 
  /**
-  * Method called when the BUTTON is pushed. Sends the form info
+  * Method called when the BUTTON is pushed. PUSHES the form info
   * into database
   */
 function postListing() {
@@ -159,7 +159,7 @@ function postListing() {
         visible: true
     }
 
-    //Push the listing object data into the DB
+    //PUSH the listing object data into the DB
     firebase.auth().onAuthStateChanged(function (user) {
         db.collection("listing").add(thisListing)
         .then(function(docRef){
@@ -183,14 +183,16 @@ function postListing() {
  **************************/
 
 /**
- * Pulls all the Listings from the DB with the
+ * GETS all the Listings from the DB with the
  * user id that matches the user. The getUserListings function
- * is called on page load.
+ * is called on page load. If the listing is "Visible" then it will
+ * be put onto the DOM
  */
 function getUserListings() {
     let userListings = [];
     let visibleListings = [];
 
+    //DB Query to pull listing information
     firebase.auth().onAuthStateChanged(function (user) {
         db.collection("listing").where("user", "==", user.uid)
         .get()
@@ -206,6 +208,7 @@ function getUserListings() {
                     visibleListings.push(thisData);
                 }
             }); 
+            //Checks if the listing is supposed to be visible
         }).then(function() {
             if (visibleListings.length == 0) {
                 let noListingsContainer = document.createElement("div");
@@ -249,6 +252,7 @@ function getListings() {
     let visibleListings = [];
     let isInMyListingsPage = false;
     
+    //Query to DB to pull USERS data
     firebase.auth().onAuthStateChanged(function (user) {
         db.collection("users").doc(user.uid)
         .get()
@@ -452,7 +456,6 @@ function createListingRow(listing, addUserButtons) {
 }
 
 
-
 /****************************
  * LISTING.HTML
  * 
@@ -464,6 +467,7 @@ function createListingRow(listing, addUserButtons) {
  * @param {*} userID 
  */
 function getSpecificListing(userID) {
+    //QUERY for listings data
     firebase.auth().onAuthStateChanged(function (user) {
         db.collection("listing").doc(userID)
         .get()
@@ -644,6 +648,7 @@ function sendMessage(listerID) {
     let listingUserID;
     let listingData;
     let thisListingID;
+    //QUERY database for listing data
     db.collection("listing").doc(listerID)
         .get()
         .then(function(doc) {
@@ -678,6 +683,7 @@ function sendMessage(listerID) {
                 listingID: thisListingID,
                 listingTitle: listingData.title
             }
+            //WRITE into database with the message object
             firebase.auth().onAuthStateChanged(function () {
                 db.collection("messages").add(thisMessage)
                 .then(function(docRef){
@@ -687,7 +693,6 @@ function sendMessage(listerID) {
                     console.log(`error adding listing --> ${error}`);
                 })
                 .then(function() {
-                    //THIS NEEDS TO BE CHANGED TO A SENT MESSAGE .HTML
                     window.location.href = "./sentConfirmation.html";
                 });
             });
@@ -707,6 +712,7 @@ function sendMessage(listerID) {
  */
 function populateInbox() {
     let userMessages = [];
+    //Query from database to get messages data that matches user ID
     firebase.auth().onAuthStateChanged(function (user) {
         db.collection("messages").where("receiver", "==", user.uid)
         .get()
@@ -798,6 +804,7 @@ function createInboxMessage(message, msgSenderName, messageID) {
  */
 function getMessage(messageID) {
     let messageData;
+    //Database query to get the specific message from the doc ID
     firebase.auth().onAuthStateChanged(function () {
         db.collection("messages").doc(messageID)
         .get()
@@ -846,6 +853,7 @@ function changeReplyButton(listingID) {
   * the fillAccountInfo function to populate the DOM
   */
 function getAccountInfo() {
+    //QUERY database to get the user information to display
     firebase.auth().onAuthStateChanged(function (user) {
         db.collection("users").doc(user.uid)
         .get()
@@ -913,6 +921,7 @@ function logout() {
  * doesn't have to type as much when updating.
  */
 function editProfileGetAccountInfo() {
+    //Query to get the user information of the user
     firebase.auth().onAuthStateChanged(function (user) {    
         db.collection("users").doc(user.uid)
         .get()
@@ -958,6 +967,8 @@ function editProfileButtonHandler() {
         description: editDescription
     }
 
+    //DB update; Update the user information with the
+    //profile information object
     firebase.auth().onAuthStateChanged(function (user) {
         db.collection("users").doc(user.uid).update(profileInfo)
         .then(function(){
