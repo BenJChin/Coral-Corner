@@ -1,13 +1,25 @@
-# Coral-Corner
 
 # Welcome to the Coral Corner!
 
-The Coral Corner is an application that helps coral collectors and enthusiasts connect with local sellers. Users can create listings to advertise their coral sellings and buyers can message the sellers if they're interested.
+The Coral Corner is an application that helps coral collectors and enthusiasts connect with local sellers. Users can create listings to advertise their coral sellings and buyers can message the sellers if they're interested.  
+
+## Main Functionality:
+* Users that want to sell coral are able to create "Coral Listings" which other users are able to see.
+* Users interested in buying coral can view local coral listings (sorted by location) and message the seller.
+* Once that initial message is initiated by the buyer, the seller is able to reply to that message back to the possible buyer.
+* The intention is that the buyer and seller are able to then negotiate a price as well as a time and location to make the transaction.
 
 
 ## Frameworks used:
 BOOTSTRAP:  
-https://bootsnipp.com/snippets/dzlk
+https://getbootstrap.com/
+
+Loading Circle:  
+Spinning loading image and code: https://loading.io/css/  
+## Database:
+FIREBASE:  
+https://firebase.google.com/  
+
 
 
 ## IMAGES USED:  
@@ -36,7 +48,7 @@ http://dedicatedaquariums.com/guide-to-keeping-euphyllia-corals/
 saltwater: 
 https://www.pinterest.ca/pin/559501953677364520/  
 FlatICONs in nav bar: https://www.flaticon.com/  
-Spinning loading image and code: https://loading.io/css/
+
 
 ## REFERENCES :  
 Acropora 
