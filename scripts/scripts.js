@@ -110,9 +110,7 @@ function convertFragData(fragType) {
  * 
  * sends the information from the parameters into the DB.
  * 
- * VALIDATION OF INPUT STILL NEEDS TO BE DONE
- * 
- */
+ ******************/
 
  /**
   * Method called when the BUTTON is pushed. Sends the form info
@@ -185,15 +183,15 @@ function postListing() {
  **************************/
 
 /**
- * Pulls the Listings from the DB with the
- * user id that matches the user
+ * Pulls all the Listings from the DB with the
+ * user id that matches the user. The getUserListings function
+ * is called on page load.
  */
 function getUserListings() {
     let userListings = [];
     let visibleListings = [];
 
     firebase.auth().onAuthStateChanged(function (user) {
-        console.log("im in function");
         db.collection("listing").where("user", "==", user.uid)
         .get()
         .then(function(querySnapshot) {
@@ -249,6 +247,7 @@ function getListings() {
     let listings = [];
     let userData;
     let visibleListings = [];
+    let isInMyListingsPage = false;
     
     firebase.auth().onAuthStateChanged(function (user) {
         db.collection("users").doc(user.uid)
@@ -271,17 +270,15 @@ function getListings() {
                 //Populate Listings Array with Listing Data
                 listings.forEach((listing) => {
                     let thisListingValues = Object.values(listing);
-
                     if (listing.visible == true) {
                         if(thisListingValues.includes(userData.city) || thisListingValues.includes(userData.province)) {
                             visibleListings.push(listing);
-                            createListingRow(listing, false);
+                            createListingRow(listing, isInMyListingsPage);
                             
                         }
                     }
 
                 });
-
                 //Create the expand search button
                 let expandListingsButton = document.createElement("button");
                 expandListingsButton.classList.add("btn");
@@ -293,7 +290,7 @@ function getListings() {
                         let thisListingValues = Object.values(listing);
                         if (listing.visible == true) {
                             if(!thisListingValues.includes(userData.city) && !thisListingValues.includes(userData.province))
-                            createListingRow(listing, false);
+                            createListingRow(listing, isInMyListingsPage);
                             
                         }
                     })
@@ -361,6 +358,10 @@ function getListings() {
  * Creates the DOM elements to show the listings on the page,
  * using the listing object (each individual listng) from the getListing method
  * @param {} listing 
+ *              the listing object
+ * @param {} addUserButtons
+ *              a boolean to check if we need to generate
+ *              the extra buttons for the myListings.html page
  */
 function createListingRow(listing, addUserButtons) {
     let articleDiv = document.createElement("article");
@@ -376,7 +377,6 @@ function createListingRow(listing, addUserButtons) {
 
     let imgLink = document.createElement("a");
     imgLink.href = `./listing.html?${listing.id}`
-
     imgDiv.appendChild(imgLink);
 
     let img = document.createElement("img");
@@ -384,7 +384,6 @@ function createListingRow(listing, addUserButtons) {
     img.alt = "A picture of coral";
     imgLink.appendChild(img);
     
-
     let listingInfoDiv = document.createElement("div");
     listingInfoDiv.classList.add("col-lg-9");
     articleDiv.appendChild(listingInfoDiv);
@@ -396,7 +395,6 @@ function createListingRow(listing, addUserButtons) {
     let listingTitle = document.createElement("h4");
     listingTitle.innerHTML = listing.title;
     titleLink.appendChild(listingTitle);
-
 
     let listingDate = document.createElement("p");
     listingDate.classList.add("text-muted");
@@ -415,6 +413,8 @@ function createListingRow(listing, addUserButtons) {
     listingDescription.innerHTML = listing.description;
     listingInfoDiv.appendChild(listingDescription);
 
+    //Checks if the buttons in myListings.html
+    //should be generated
     if (addUserButtons) {
         let viewListingButton = document.createElement("button");
         viewListingButton.classList.add("btn");
@@ -426,6 +426,7 @@ function createListingRow(listing, addUserButtons) {
         viewListingButton.innerHTML = `View Listing`;
         listingInfoDiv.appendChild(viewListingButton);
 
+        //The DELETE listing button
         let deleteListingButton = document.createElement("button");
         deleteListingButton.classList.add("btn");
         deleteListingButton.classList.add("btn-danger");
@@ -464,7 +465,6 @@ function createListingRow(listing, addUserButtons) {
  */
 function getSpecificListing(userID) {
     firebase.auth().onAuthStateChanged(function (user) {
-        
         db.collection("listing").doc(userID)
         .get()
         .then(function(doc) {
@@ -472,8 +472,6 @@ function getSpecificListing(userID) {
             let listingID = doc.id;
             let listingListerID = listingData.user;
             let contactSellerButton = document.getElementById("listing_contact_button");
-
-            
 
             createListingPage(listingData);
             updateContactSellerButton(contactSellerButton, listingID, listingListerID, user.uid);
@@ -492,8 +490,6 @@ function createListingPage(listing) {
     if (listing.species == 'sps' || listing.species =='lps') {
         listing.species = convertPolypData(listing.species);
     }
-
-
     let domInsertion = document.getElementById("listing_insertion");
 
     let titleContainer = document.createElement("div");
@@ -565,7 +561,6 @@ function createListingPage(listing) {
     frag.innerHTML = convertFragData(listing.fragType);
     fragContainer.appendChild(frag);
 
-    //awful variable name
     let userDescriptionContainer = document.createElement("div");
     userDescriptionContainer.classList.add("py-2");
     descriptionContainer.appendChild(userDescriptionContainer);
@@ -583,10 +578,6 @@ function createListingPage(listing) {
     userDescriptionContainer.appendChild(cost);
 }
 
-
-
-
-
 /**
  * Checks if the user browsing the page is the same user who made the listing. If 
  * true, changes the button to navigate back to myListing. Otherwise, user can
@@ -598,16 +589,13 @@ function createListingPage(listing) {
  * @param {the current logged in user of the page} userID 
  */
 function updateContactSellerButton(elementID, listingID, listerID, userID) {
-    if (listerID == userID) {
-        
+    if (listerID == userID) {  
         elementID.innerHTML = `<button type="button" class="btn btn-primary btn-lg" >My Listings</button>`;
         elementID.href = `./myListings.html`;
     } else {
         elementID.href = `./sendMessage.html?${listingID}`;
     }
 }
-
-
 
 
 /****************************
@@ -631,16 +619,12 @@ function sendMessageHandler() {
  *          it was passed on from listings page
  */
 function getListingData(listerID) {
-    firebase.auth().onAuthStateChanged(function (user) {
-        
+    firebase.auth().onAuthStateChanged(function () { 
         db.collection("listing").doc(listerID)
         .get()
         .then(function(doc) {
             let listingData = doc.data();
-            //let listingUserID = listingData.user;
-
             document.getElementById("listing_title").value = listingData.title;
-
             document.getElementById("load_spinner").style.display = "none";
         })
         .catch((error) => {
@@ -660,21 +644,16 @@ function sendMessage(listerID) {
     let listingUserID;
     let listingData;
     let thisListingID;
-  
     db.collection("listing").doc(listerID)
         .get()
         .then(function(doc) {
-            console.log("why");
             listingData = doc.data();
             thisListingID = doc.id;
-         
             listingUserID = listingData.user;
-            console.log("in function: " + listingUserID);
         }).then(function() {
             let messageSubject = document.getElementById("message_subject").value;
             let message = document.getElementById("messageBody").value;
             let thisUser = firebase.auth().currentUser.uid;
-
             let thisDate = new Date();
             let listYear = thisDate.getFullYear();
             let listMonth = thisDate.getMonth();
@@ -699,10 +678,10 @@ function sendMessage(listerID) {
                 listingID: thisListingID,
                 listingTitle: listingData.title
             }
-            firebase.auth().onAuthStateChanged(function (user) {
+            firebase.auth().onAuthStateChanged(function () {
                 db.collection("messages").add(thisMessage)
                 .then(function(docRef){
-                    console.log(`listing created with id ${docRef}. REMEMBER TO UPDATE THE PAGE REDIRECT`);
+                    console.log(`listing created with id ${docRef}`);
                 })
                 .catch(function(error){
                     console.log(`error adding listing --> ${error}`);
@@ -727,7 +706,6 @@ function sendMessage(listerID) {
  * currently logged in user id and calls createInboxMessage to populate the DOM with them.
  */
 function populateInbox() {
-    
     let userMessages = [];
     firebase.auth().onAuthStateChanged(function (user) {
         db.collection("messages").where("receiver", "==", user.uid)
@@ -737,43 +715,30 @@ function populateInbox() {
                 let thisMessage = doc.data();
                 thisMessage.docID = doc.id;
                 userMessages.push(thisMessage);
-                document.getElementById("load_spinner").style.display = "none";
-                
+                document.getElementById("load_spinner").style.display = "none"; 
             }); 
         }).then(function() {
             if (userMessages.length == 0) {
                 let emptyInboxMsg = document.getElementById("inbox_insertion");
                 emptyInboxMsg.innerHTML = "You have no messages!";
             } else {
-
                 userMessages.forEach((message) => {
                     let msgSenderID = message.sender;
                     let msgSenderName;
                     let messageDocID = message.docID;
 
-                    
-
                     db.collection("users").doc(msgSenderID)
                     .get()
                     .then(function(doc) {
                         let docData = doc.data();
-                        msgSenderName = docData.name;
-                    
-                        
+                        msgSenderName = docData.name; 
                         createInboxMessage(message, msgSenderName, messageDocID);
-
                     })
                     .catch((error) => {
                         console.log(`Error getting messages: ${error}`);
                     });
-
-
-                    
-
-
                 })
             }
-
         })
         .catch((error) => {
             console.log(`Error getting messages: ${error}`);
@@ -793,7 +758,6 @@ function populateInbox() {
  *              the message doc id
  */
 function createInboxMessage(message, msgSenderName, messageID) {
-    let senderID = message.sender;
     let senderName = msgSenderName;
     let inboxMessageID = messageID;
 
@@ -834,22 +798,17 @@ function createInboxMessage(message, msgSenderName, messageID) {
  */
 function getMessage(messageID) {
     let messageData;
-    firebase.auth().onAuthStateChanged(function (user) {
-        
+    firebase.auth().onAuthStateChanged(function () {
         db.collection("messages").doc(messageID)
         .get()
         .then(function(doc) {
-            messageData = doc.data();
-
-            
+            messageData = doc.data();   
         }).then(function() {
             db.collection("users").doc(messageData.sender)
         .get()
-        .then(function(user) {
-            
+        .then(function(user) {       
             userData = user.data();
             userName = userData.name;
-
             document.getElementById("view_message_sender").innerHTML = userName;
             document.getElementById("view_message_subject").innerHTML = messageData.subject;
             document.getElementById("view_message_body").innerHTML = messageData.message;
@@ -888,17 +847,13 @@ function changeReplyButton(listingID) {
   */
 function getAccountInfo() {
     firebase.auth().onAuthStateChanged(function (user) {
-        
         db.collection("users").doc(user.uid)
         .get()
         .then(function(data) {
-            
             let userData = data.data();
             fillAccountInfo(userData);
             document.getElementById("load_spinner").style.display = "none";
-
-        })
-        
+        })    
         .catch((error) => {
             console.log(`Error getting data: ${error}`);
         });
@@ -906,7 +861,9 @@ function getAccountInfo() {
 }
 
 /**
- * Fills the DOM information with the user information from database
+ * Fills the DOM information with the user information from database. 
+ * Checks if each value has been set yet, if it hasn't, then sets it to
+ * a default empty string or a message.
  * @param {user} account 
  */
 function fillAccountInfo(account) {
@@ -915,11 +872,9 @@ function fillAccountInfo(account) {
     document.getElementById("profile_email").innerHTML = account.email;
     if (account.description == undefined) {
         document.getElementById("profile_description").innerHTML = ``;
-
     } else {
         document.getElementById("profile_description").innerHTML = account.description;
-    }
-    
+    } 
     if (account.city == undefined) {
         document.getElementById("profile_city").innerHTML = "Not set yet!";
     } else {
@@ -930,13 +885,12 @@ function fillAccountInfo(account) {
         document.getElementById("profile_province").innerHTML = "";
     } else {
         document.getElementById("profile_province").innerHTML = `, ${account.province.toUpperCase()}`;
-    }
-    
-    
+    } 
 }
 
 /**
- * Logout functionality tied to the button
+ * Logout functionality tied to the button. Logs
+ * user out of their account.
  */
 function logout() {
     firebase.auth().signOut()
@@ -959,17 +913,14 @@ function logout() {
  * doesn't have to type as much when updating.
  */
 function editProfileGetAccountInfo() {
-    firebase.auth().onAuthStateChanged(function (user) {
-        
+    firebase.auth().onAuthStateChanged(function (user) {    
         db.collection("users").doc(user.uid)
         .get()
         .then(function(data) {
-            let userData = data.data();
-            
+            let userData = data.data();           
             fillPlaceholderData(userData);
             document.getElementById("load_spinner").style.display = "none";
-        })
-        
+        })     
         .catch((error) => {
             console.log(`Error getting data: ${error}`);
         });
@@ -986,7 +937,6 @@ function fillPlaceholderData(account) {
     document.getElementById("edit_city").value = account.city;
     document.getElementById("edit_province").value = account.province;
     document.getElementById("edit_profile_description").value = account.description;
-
 }
 
 /**
