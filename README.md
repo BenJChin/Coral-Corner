@@ -6,7 +6,11 @@ The Coral Corner is an application that helps coral collectors and enthusiasts c
 
 ## Frameworks used:
 BOOTSTRAP:  
-https://bootsnipp.com/snippets/dzlk
+https://getbootstrap.com/
+
+## Database:
+FIREBASE:  
+https://firebase.google.com/  
 
 
 ## IMAGES USED:  
