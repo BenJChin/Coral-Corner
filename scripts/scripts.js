@@ -15,7 +15,7 @@ function capitalize(word) {
 
 /**
  * Translates the month integer into the string
- * for that Month
+ * for that Month. From January (0) to December (11)
  * @param {monthNumber} num 
  */
 function translateMonth(num) {
@@ -73,6 +73,37 @@ function parseURL() {
     return userID;
 }
 
+/**
+ * Takes the species names from sps or lps from the
+ * DB and converts into their full name as a string.
+ * @param {*} polyp_data 
+ */
+function convertPolypData(polyp_data) {
+    if (polyp_data == "lps") {
+        return "Large Polyp Stony";
+    }
+    if (polyp_data == "sps") {
+        return "Small Polyp Stony";
+    }
+}
+
+/**
+ * Takes the fragType data from the DB and returns it into
+ * a friendly readable string.
+ * @param {} fragType 
+ */
+function convertFragData(fragType) {
+    switch (fragType) {
+        case "frag_size":
+            return "Fragment";
+            break;
+        case "reg_size":
+            return "Full coral size";
+            break;
+        default:
+            return "Unspecified";
+    }
+}
 /*****************
  * SELL.HTML
  * postListing used in the POST button of the sell.html page
@@ -130,7 +161,7 @@ function postListing() {
         visible: true
     }
 
-    
+    //Push the listing object data into the DB
     firebase.auth().onAuthStateChanged(function (user) {
         db.collection("listing").add(thisListing)
         .then(function(docRef){
@@ -186,7 +217,6 @@ function getUserListings() {
                 })
             }
 
-            
         })
         .catch((error) => {
             console.log(`Error getting listings: ${error}`);
@@ -289,19 +319,16 @@ function getListings() {
                 }); 
             })
             .then(function() {
-
+                document.getElementById("load_spinner").style.display = "none";
                 //Populate Listings Array with Listing Data
                 listings.forEach((listing) => {
                     let thisListingValues = Object.values(listing);
-
-                    
-                    console.log(userData.city)
-                    console.log(thisListingValues.includes(userData.city));
 
                     if (listing.visible == true) {
                         if(thisListingValues.includes(userData.city) || thisListingValues.includes(userData.province)) {
                             visibleListings.push(listing);
                             createListingRow(listing);
+                            
                         }
                     }
 
@@ -315,12 +342,18 @@ function getListings() {
                 expandListingsButton.innerHTML = "Expand Listings";
                 expandListingsButton.onclick = function() {
                     listings.forEach((listing) => {
+                        let thisListingValues = Object.values(listing);
                         if (listing.visible == true) {
+                            if(!thisListingValues.includes(userData.city) && !thisListingValues.includes(userData.province))
                             createListingRow(listing);
+                            
                         }
                     })
 
-                    document.getElementById("no_listing_msg").style.display = "none";
+                    if (document.body.contains(document.getElementById("no_listings_msg"))) {
+                        document.getElementById("no_listing_msg").style.display = "none";
+                    }
+                    
                     expandListingsButton.style.display = "none";
 
                 }
@@ -471,6 +504,11 @@ function getSpecificListing(userID) {
  * @param {} listing 
  */
 function createListingPage(listing) {
+    if (listing.species == 'sps' || listing.species =='lps') {
+        listing.species = convertPolypData(listing.species);
+    }
+
+
     let domInsertion = document.getElementById("listing_insertion");
 
     let titleContainer = document.createElement("div");
@@ -559,18 +597,7 @@ function createListingPage(listing) {
     cost.innerHTML = `Cost: ${listing.cost}`;
 }
 
-function convertFragData(fragType) {
-    switch (fragType) {
-        case "frag_size":
-            return "Fragment";
-            break;
-        case "reg_size":
-            return "Full coral size";
-            break;
-        default:
-            return "Unspecified";
-    }
-}
+
 
 
 
@@ -892,9 +919,26 @@ function fillAccountInfo(account) {
     document.getElementById("title_user_name").innerHTML = account.name;
     document.getElementById("profile_name").innerHTML = account.name;
     document.getElementById("profile_email").innerHTML = account.email;
-    document.getElementById("profile_description").innerHTML = account.description;
-    document.getElementById("profile_city").innerHTML = account.city;
-    document.getElementById("profile_province").innerHTML = account.province.toUpperCase();
+    if (account.description == undefined) {
+        document.getElementById("profile_description").innerHTML = ``;
+
+    } else {
+        document.getElementById("profile_description").innerHTML = account.description;
+    }
+    
+    if (account.city == undefined) {
+        document.getElementById("profile_city").innerHTML = "Not set yet!";
+    } else {
+        document.getElementById("profile_city").innerHTML = account.city;
+    }
+
+    if (account.province == undefined) {
+        document.getElementById("profile_province").innerHTML = "";
+    } else {
+        document.getElementById("profile_province").innerHTML = `, ${account.province.toUpperCase()}`;
+    }
+    
+    
 }
 
 /**

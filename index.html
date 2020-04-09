@@ -14,7 +14,7 @@
     <link href="https://fonts.googleapis.com/css?family=Kaushan+Script&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="./style/style.css">
 </head>
-<body>
+<body id="index_body">
     <!-- **************************************
         
             NAV BAR
@@ -30,67 +30,53 @@
             <span class="navbar-toggler-icon"></span>
           </button>
         
-        <div class="collapse navbar-collapse ml-auto" id="navbarSupportedContent">
-            <ul class="navbar-nav ml-auto"></ul>
-            <!--
-                
-                <li class="nav-item ml-auto">
-                    <form class="form-inline px-1">
-                        <a href="">
-                            <button class="btn btn-outline-success nav-button" type="button">View</button>
-                        </a>
-                    </form>
-                </li>
-                <li class="nav-item ml-auto">
-                    <form class="form-inline px-1">
-                        <a href="">
-                            <button class="btn btn-outline-success nav-button" type="button">Sell</button>
-                        </a>
-                    </form>
-                </li>
-                <li class="nav-item ml-auto">
-                    <form class="form-inline px-1">
-                        <a href="">
-                            <button class="btn btn-outline-success nav-button" type="button">KB</button>
-                        </a>
-                    </form>
-                </li>
-
-
-            -->
-            
-                <li class="nav-item ml-auto nav-list">
-                    <form class="form-inline px-1">
-                        <a href="./pages/login.html">
-                            <button class="btn btn-outline-success nav-button" type="button">Log In</button>
-                        </a>
-                    </form>
-                </li>  
-            </ul>
-        </div>
+        
     </nav>
 
     <div class="jumbotron jumbotron-fluid bg-image ">
         <div class="container d-flex justify-content-center">
             <h1 class="display-4 ">The Coral Corner</h1>
         </div>
+
+        <div class="d-flex justify-content-center">
+            <div class="card index_card">
+                <div class="card-body d-flex justify-content-center">
+                    <p class="lead">Login now to explore a world of coral!</p>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <a href="./pages/login.html"><button class="main-button btn btn-primary index_button">Login</button></a>
+                </div>
+                  
+            </div>
+        </div>
         
-        <div class="container button-trio">
-            <div class="d-flex justify-content-around">
-                <a href="./pages/buy.html"><button class="main-button btn btn-primary">View Listings</button></a> 
+       
+        
+        <!--
 
-                <!-- Need to detect if logged in and then
-                    adjust based on that
-
-<a href="./pages/sell.html"><button class="main-button btn btn-primary">Create a Listing</button></a> 
-
-                -->
-                
-                <a href="./pages/wiki.html"><button class="main-button btn btn-primary">View Knowledgebase</button></a> 
+            
+        -->
+        
+    </div>
+    
+ 
+    <div class="container coral_blurb">
+        <div class="row">
+            <div class="col-lg-6 col-md-6">
+                <div class="info-left">
+                    <img id="coral_blurb_img" src="./img/sps.jpg">
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <div class="info-right">
+                    <h2>What is the Coral Corner?</h2>
+                    <p> The Coral Corner helps connect coral enthusiasts to coral sellers! Browse local coral listings in Canada or sell your own coral! With a built-in messaging system, it has never been easier to find the perfect coral. </p>
+                    <br>
+                </div>
             </div>
         </div>
     </div>
-    
+ 
 
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>

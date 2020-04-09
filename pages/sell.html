@@ -75,7 +75,7 @@
     </nav>
 
         <!--Why do we have a search bar here??-->
-        <div class="container">
+        <div class="container search_bar">
             <div class="input-group">
                 <input type="text" class="form-control" placeholder="Search...">
                 <div class="input-group-append">
@@ -86,106 +86,110 @@
             </div>  
         </div>
         
-        <div class="container">
-            <h1>Listing details</h1>
-        <br>
-
-        <form>
-            <div class="form-group row">
-                <label for="inputTitle" class="col-sm-2 col-form-label">Title</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="inputTitle" placeholder="Title">
+        <div class="container py-3 sell_form_container">
+            <div class="container">
+                <h1>Listing details</h1>
+            <br>
+    
+            <form>
+                <div class="form-group row">
+                    <label for="inputTitle" class="col-sm-2 col-form-label">Title</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="inputTitle" placeholder="Title">
+                    </div>
                 </div>
-            </div>
-            <div class="form-group row">
-                <label for="inputPrice" class="col-sm-2 col-form-label">Price($)</label>
-                <div class="col-sm-10">
-                    <input type="number" class="form-control" id="inputPrice" step="0.01" placeholder="0.00">
+                <div class="form-group row">
+                    <label for="inputPrice" class="col-sm-2 col-form-label">Price($)</label>
+                    <div class="col-sm-10">
+                        <input type="number" class="form-control" id="inputPrice" step="0.01" placeholder="0.00">
+                    </div>
                 </div>
-            </div>
-
-            <div class="form-group row">
-                <label for="species" class="col-sm-2 col-form-label">Species</label>
-                <div class="col-sm-10"> 
-                    <select class="custom-select" id="speciesID">
-                        <option selected>Choose a species</option>
-                        <option value="acropora">Acropora</option>
-                        <option value="lps">Large Polyp Stony (LPS)</option>
-                        <option value="sps">Small Polyp Stony (SPS)</option>
-                        <option value="montipora">Montipora</option>
-                        <option value="zoanthid">Zoanthid</option>
-                        <option value="euphyllia">Euphyllia</option>
-                        <option value="saltwater">Saltwater</option>
-                        <option value="other">Other</option>
-
-                    </select>
-                    <!--need to JS detect "other" to create textfield here-->
+    
+                <div class="form-group row">
+                    <label for="species" class="col-sm-2 col-form-label">Species</label>
+                    <div class="col-sm-10"> 
+                        <select class="custom-select" id="speciesID">
+                            <option selected>Choose a species</option>
+                            <option value="acropora">Acropora</option>
+                            <option value="lps">Large Polyp Stony (LPS)</option>
+                            <option value="sps">Small Polyp Stony (SPS)</option>
+                            <option value="montipora">Montipora</option>
+                            <option value="zoanthid">Zoanthid</option>
+                            <option value="euphyllia">Euphyllia</option>
+                            <option value="saltwater">Saltwater</option>
+                            <option value="other">Other</option>
+    
+                        </select>
+                        <!--need to JS detect "other" to create textfield here-->
+                    </div>
                 </div>
-            </div>
-
-            <div class="form-group row">
-                <label for="inputPrice" class="col-sm-2 col-form-label">Regular or Fragment</label>
-                <div class="col-sm-10">
-                    <input type="radio" class="form-control-input" id="reg_size" value="reg_size" name="frag_type">
-                    <label class="form-check-label" for="frag_type">Regular</label>
-
-                    <input type="radio" class="ml-2 form-control-input" id="frag_size" value="frag_size" name="frag_type">
-                    <label class="form-check-label" for="frag_type">Fragment</label>
+    
+                <div class="form-group row">
+                    <label for="inputPrice" class="col-sm-2 col-form-label">Regular or Fragment</label>
+                    <div class="col-sm-10">
+                        <input type="radio" class="form-control-input" id="reg_size" value="reg_size" name="frag_type">
+                        <label class="form-check-label" for="frag_type">Regular</label>
+    
+                        <input type="radio" class="ml-2 form-control-input" id="frag_size" value="frag_size" name="frag_type">
+                        <label class="form-check-label" for="frag_type">Fragment</label>
+                    </div>
+                    
+                </div>
+    
+                <div class="form-group row">
+                    <label for="city" class="col-sm-2 col-form-label">Your city</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="city" placeholder="Vancouver">
+                    </div>
+                </div>
+    
+                <div class="form-group row">
+                    <label for="province" class="col-sm-2 col-form-label">Province</label>
+                    <div class="col-sm-10"> 
+                        <select class="custom-select" id="province">
+                            <option selected>Choose a province</option>
+                            <option value="ab">Alberta</option>
+                            <option value="bc">British Columbia</option>
+                            <option value="mb">Manitoba</option>
+                            <option value="nb">New Brunswick</option>
+                            <option value="nl">Newfoundland and Labrador</option>
+                            <option value="nt">Northwest Territories</option>
+                            <option value="ns">Nova Scotia</option>
+                            <option value="nu">Nunavut</option>
+                            <option value="on">Ontario</option>
+                            <option value="pe">Prince Edward Island</option>
+                            <option value="qc">Quebec</option>
+                            <option value="sk">Saskatchewan</option>
+                            <option value="yt">Yukon</option>
+    
+                        </select>
+                    
+                    </div>
+                </div>
+    
+                <div class="form-group row">
+                    <label for="description" class="col-sm-2 col-form-label">Describe your listing</label>
+                    <div class="col-sm-10">
+                        <textarea name="description" class="form-control"id="description" cols="30" rows="10"></textarea>
+                    </div>
                 </div>
                 
-            </div>
-
-            <div class="form-group row">
-                <label for="city" class="col-sm-2 col-form-label">Your city</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="city" placeholder="Vancouver">
-                </div>
-            </div>
-
-            <div class="form-group row">
-                <label for="province" class="col-sm-2 col-form-label">Province</label>
-                <div class="col-sm-10"> 
-                    <select class="custom-select" id="province">
-                        <option selected>Choose a province</option>
-                        <option value="ab">Alberta</option>
-                        <option value="bc">British Columbia</option>
-                        <option value="mb">Manitoba</option>
-                        <option value="nb">New Brunswick</option>
-                        <option value="nl">Newfoundland and Labrador</option>
-                        <option value="nt">Northwest Territories</option>
-                        <option value="ns">Nova Scotia</option>
-                        <option value="nu">Nunavut</option>
-                        <option value="on">Ontario</option>
-                        <option value="pe">Prince Edward Island</option>
-                        <option value="qc">Quebec</option>
-                        <option value="sk">Saskatchewan</option>
-                        <option value="yt">Yukon</option>
-
-                    </select>
+    
+                <!--IF WE HAVE TIME, ADD IMAGE UPLOADING HERE-->
+    
                 
+                <div class="form-group row">
+                    <div class="col-sm-10 offset-sm-2 d-flex justify-content-around">
+                        <button type="button" class="btn btn-danger">Cancel</button>
+                        <button type="button" class="btn btn-success" onclick="postListing()">Post</button>
+                    </div>
                 </div>
+            </form>
+    
             </div>
-
-            <div class="form-group row">
-                <label for="description" class="col-sm-2 col-form-label">Describe your listing</label>
-                <div class="col-sm-10">
-                    <textarea name="description" class="form-control"id="description" cols="30" rows="10"></textarea>
-                </div>
-            </div>
-            
-
-            <!--IF WE HAVE TIME, ADD IMAGE UPLOADING HERE-->
-
-            
-            <div class="form-group row">
-                <div class="col-sm-10 offset-sm-2 d-flex justify-content-around">
-                    <button type="button" class="btn btn-danger">Cancel</button>
-                    <button type="button" class="btn btn-success" onclick="postListing()">Post</button>
-                </div>
-            </div>
-        </form>
 
         </div>
+        
         
 
      <!--   <div class="input-group px-2">
