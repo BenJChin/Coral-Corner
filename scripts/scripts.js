@@ -190,6 +190,7 @@ function postListing() {
  */
 function getUserListings() {
     let userListings = [];
+    let visibleListings = [];
 
     firebase.auth().onAuthStateChanged(function (user) {
         console.log("im in function");
@@ -201,17 +202,26 @@ function getUserListings() {
                 let thisData = doc.data();
                 thisData.docID = thisListingID;
                 userListings.push(thisData);
+                document.getElementById("load_spinner").style.display = "none";
 
+                if (thisData.visible) {
+                    visibleListings.push(thisData);
+                }
             }); 
         }).then(function() {
-            if (userListings.length == 0) {
+            if (visibleListings.length == 0) {
+                let noListingsContainer = document.createElement("div");
+                noListingsContainer.classList.add("container");
+                noListingsContainer.classList.add("general_container");
+                noListingsContainer.classList.add("py-3");
+                document.getElementById("listing_container").appendChild(noListingsContainer);
                 let noListingsMsg = document.createElement("p");
                 noListingsMsg.innerHTML = "You haven't created any listings!";
-                document.getElementById("card_deck").appendChild(noListingsMsg);
+                noListingsContainer.appendChild(noListingsMsg);
             } else {
                 userListings.forEach((listing) => {
                     if(listing.visible == true) {
-                        createListingCard(listing);
+                        createListingRow(listing, true);
                     }
                     
                 })
@@ -223,68 +233,6 @@ function getUserListings() {
         });
     });
 }
-
-
-
-/**
- * Creates the DOM elements to display the user listings
- * in the MY_LISTINGS.html page. Displays them as cards.
- * 
- * @param {} listing 
- */
-function createListingCard(listing) {
-    let cardDiv = document.createElement("div");
-    cardDiv.classList.add("card");
-    document.getElementById("card_deck").appendChild(cardDiv);
-
-    let cardImg = document.createElement("img");
-    cardImg.classList.add("card-img-top");
-    cardImg.classList.add("card_img");
-    cardImg.src = "../img/placeholder_coral.jpeg";
-    cardDiv.appendChild(cardImg);
-
-    let cardBody = document.createElement("div");
-    cardBody.classList.add("card-body");
-    cardDiv.appendChild(cardBody);
-
-    let cardTitle = document.createElement("h4");
-    cardTitle.classList.add("card-title");
-    cardTitle.innerHTML = listing.title;
-    cardBody.appendChild(cardTitle);
-
-    let cardSubTitle = document.createElement("h4");
-    cardSubTitle.classList.add("card-subtitle");
-    cardSubTitle.classList.add("mb-2");
-    cardSubTitle.classList.add("text-muted");
-    cardSubTitle.innerHTML = listing.date;
-    cardBody.appendChild(cardSubTitle);
-
-    let cardParagraph = document.createElement("p");
-    cardParagraph.classList.add("card-text");
-    cardParagraph.innerHTML = listing.description;
-    cardBody.appendChild(cardParagraph);
-
-    let cardFooter = document.createElement("div");
-    cardFooter.classList.add("card-footer");
-    cardDiv.appendChild(cardFooter);
-
-    let cardSmall = document.createElement("small");
-    cardSmall.classList.add("text-muted");
-    cardFooter.appendChild(cardSmall);
-
-    let viewListingLink = document.createElement("a");
-    viewListingLink.classList.add("card-link");
-    viewListingLink.href = `./listing.html?${listing.docID}`;
-    viewListingLink.innerHTML = "View";
-    cardSmall.appendChild(viewListingLink);
-
-    let deleteListingLink = document.createElement("a");
-    deleteListingLink.classList.add("card-link");
-    deleteListingLink.href = "#!";
-    deleteListingLink.innerHTML = "Delete";
-    cardSmall.appendChild(deleteListingLink);
-}
-
 
 
 /****************************
@@ -327,7 +275,7 @@ function getListings() {
                     if (listing.visible == true) {
                         if(thisListingValues.includes(userData.city) || thisListingValues.includes(userData.province)) {
                             visibleListings.push(listing);
-                            createListingRow(listing);
+                            createListingRow(listing, false);
                             
                         }
                     }
@@ -345,7 +293,7 @@ function getListings() {
                         let thisListingValues = Object.values(listing);
                         if (listing.visible == true) {
                             if(!thisListingValues.includes(userData.city) && !thisListingValues.includes(userData.province))
-                            createListingRow(listing);
+                            createListingRow(listing, false);
                             
                         }
                     })
@@ -412,7 +360,7 @@ function getListings() {
  * using the listing object (each individual listng) from the getListing method
  * @param {} listing 
  */
-function createListingRow(listing) {
+function createListingRow(listing, addUserButtons) {
     let articleDiv = document.createElement("article");
     articleDiv.classList.add("search-result");
     articleDiv.classList.add("row");
@@ -465,8 +413,40 @@ function createListingRow(listing) {
     listingDescription.innerHTML = listing.description;
     listingInfoDiv.appendChild(listingDescription);
 
-}
+    if (addUserButtons) {
+        let viewListingButton = document.createElement("button");
+        viewListingButton.classList.add("btn");
+        viewListingButton.classList.add("btn-primary");
+        viewListingButton.classList.add("my_listings_button");
+        viewListingButton.onclick = function() {
+            window.location.href = `./listing.html?${listing.docID}`;
+        }
+        viewListingButton.innerHTML = `View Listing`;
+        listingInfoDiv.appendChild(viewListingButton);
 
+        let deleteListingButton = document.createElement("button");
+        deleteListingButton.classList.add("btn");
+        deleteListingButton.classList.add("btn-danger");
+        deleteListingButton.classList.add("my_listings_button");
+        deleteListingButton.onclick = function() {
+            let userConfirm = window.confirm("Are you sure you want to delete this listing?");
+            if (userConfirm) {
+                listing.visible = false;
+                db.collection("listing").doc(listing.docID).update(listing)
+                .then(function() {
+                    window.alert("Listing deleted");
+                })
+                .then(function() {
+                    location.reload();
+                }).catch(function(error) {
+                    console.log(`Error updating: ${error}`);
+                })
+            }
+        }
+        deleteListingButton.innerHTML = `Delete`;
+        listingInfoDiv.appendChild(deleteListingButton);
+    }
+}
 
 
 
