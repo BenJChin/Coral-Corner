@@ -9,7 +9,7 @@
  * @param {string} word 
  */
 function capitalize(word) {
-    let capitalizedWord = word[0].toUpperCase() + word.slice(1);
+    const capitalizedWord = word[0].toUpperCase() + word.slice(1);
     return capitalizedWord;
 }
 
@@ -67,9 +67,9 @@ function translateMonth(num) {
  * between pages. Only returns the first value.
  */
 function parseURL() {
-    let queryString = decodeURIComponent(window.location.search)
-    let queries = queryString.split("?");
-    let userID = queries[1];
+    const queryString = decodeURIComponent(window.location.search)
+    const queries = queryString.split("?");
+    const userID = queries[1];
     return userID;
 }
 
@@ -117,33 +117,33 @@ function convertFragData(fragType) {
   * into database
   */
 function postListing() {
-    let listTitle = document.getElementById("inputTitle").value;
-    let listPrice = parseInt(document.getElementById("inputPrice").value);
-    let listSpecies = document.getElementById("speciesID").value;
+    const listTitle = document.getElementById("inputTitle").value;
+    const listPrice = parseInt(document.getElementById("inputPrice").value);
+    const listSpecies = document.getElementById("speciesID").value;
     let listFragType;
     
-    let fragRadio = document.getElementsByName("frag_type");
+    const fragRadio = document.getElementsByName("frag_type");
     for (let i = 0; i < fragRadio.length; i++) {
         if(fragRadio[i].checked) {
             listFragType = fragRadio[i].value;
         }
     }
-    let listCity = document.getElementById("city").value.toLowerCase();
-    let listProv = document.getElementById("province").value;
-    let listDescription = document.getElementById("description").value;
-    let thisUser = firebase.auth().currentUser.uid;
+    const listCity = document.getElementById("city").value.toLowerCase();
+    const listProv = document.getElementById("province").value;
+    const listDescription = document.getElementById("description").value;
+    const thisUser = firebase.auth().currentUser.uid;
 
-    let thisDate = new Date();
-    let listYear = thisDate.getFullYear();
-    let listMonth = thisDate.getMonth();
-    let listDay = thisDate.getDate();
-    let listHour = thisDate.getHours();
-    let listMin = thisDate.getMinutes();
-    let listMonthTranslated = translateMonth(listMonth);
+    const thisDate = new Date();
+    const listYear = thisDate.getFullYear();
+    const listMonth = thisDate.getMonth();
+    const listDay = thisDate.getDate();
+    const listHour = thisDate.getHours();
+    const listMin = thisDate.getMinutes();
+    const listMonthTranslated = translateMonth(listMonth);
 
-    let listDate = `${listMonthTranslated} ${listDay}, ${listYear}, ${listHour}:${listMin}`;
+    const listDate = `${listMonthTranslated} ${listDay}, ${listYear}, ${listHour}:${listMin}`;
 
-    let thisListing = {
+    const thisListing = {
         user: thisUser,
         title: listTitle,
         price: listPrice,
@@ -198,8 +198,8 @@ function getUserListings() {
         .get()
         .then(function(querySnapshot) {
             querySnapshot.forEach(function(doc) {
-                let thisListingID = doc.id;
-                let thisData = doc.data();
+                const thisListingID = doc.id;
+                const thisData = doc.data();
                 thisData.docID = thisListingID;
                 userListings.push(thisData);
                 document.getElementById("load_spinner").style.display = "none";
@@ -211,14 +211,15 @@ function getUserListings() {
             //Checks if the listing is supposed to be visible
         }).then(function() {
             if (visibleListings.length == 0) {
-                let noListingsContainer = document.createElement("div");
+                const noListingsContainer = document.createElement("div");
                 noListingsContainer.classList.add("container");
                 noListingsContainer.classList.add("general_container");
                 noListingsContainer.classList.add("py-3");
                 document.getElementById("listing_container").appendChild(noListingsContainer);
-                let noListingsMsg = document.createElement("p");
+                const noListingsMsg = document.createElement("p");
                 noListingsMsg.innerHTML = "You haven't created any listings!";
                 noListingsContainer.appendChild(noListingsMsg);
+                document.getElementById("load_spinner").style.display = "none"; 
             } else {
                 userListings.forEach((listing) => {
                     if(listing.visible == true) {
@@ -250,7 +251,7 @@ function getListings() {
     let listings = [];
     let userData;
     let visibleListings = [];
-    let isInMyListingsPage = false;
+    const isInMyListingsPage = false;
     
     //READ from DB to pull USERS data
     firebase.auth().onAuthStateChanged(function (user) {
@@ -265,7 +266,7 @@ function getListings() {
             .get()
             .then(function(querySnapshot) {
                 querySnapshot.forEach(function(doc) {
-                    let listingData = doc.data();
+                    const listingData = doc.data();
                     listingData.id = doc.id;
                     listings.push(listingData);
                 }); 
@@ -274,7 +275,7 @@ function getListings() {
                 
                 //Populate Listings Array with Listing Data
                 listings.forEach((listing) => {
-                    let thisListingValues = Object.values(listing);
+                    const thisListingValues = Object.values(listing);
                     if (listing.visible == true) {
                         if(thisListingValues.includes(userData.city) || thisListingValues.includes(userData.province)) {
                             visibleListings.push(listing);
@@ -285,14 +286,14 @@ function getListings() {
 
                 });
                 //Create the expand search button
-                let expandListingsButton = document.createElement("button");
+                const expandListingsButton = document.createElement("button");
                 expandListingsButton.classList.add("btn");
                 expandListingsButton.classList.add('btn-primary');
                 expandListingsButton.setAttribute("id", "expand_listing_button");
                 expandListingsButton.innerHTML = "Expand Listings";
                 expandListingsButton.onclick = function() {
                     listings.forEach((listing) => {
-                        let thisListingValues = Object.values(listing);
+                        const thisListingValues = Object.values(listing);
                         if (listing.visible == true) {
                             if(!thisListingValues.includes(userData.city) && !thisListingValues.includes(userData.province))
                             createListingRow(listing, isInMyListingsPage);
@@ -316,14 +317,14 @@ function getListings() {
                  */
                 if (visibleListings.length == 0) {
                     if (userData.city == undefined || userData.province == undefined) {
-                        let accountButtonContainer = document.getElementById("go_to_account_button_container");
+                        const accountButtonContainer = document.getElementById("go_to_account_button_container");
 
-                        let noListingsMsg = document.createElement("p");
+                        const noListingsMsg = document.createElement("p");
                         noListingsMsg.innerHTML = "You don't seem to have a location set. Check your account page and set a location!";
                         noListingsMsg.setAttribute("id", "no_listing_msg");
                         document.getElementById("listing_container").insertBefore(noListingsMsg, accountButtonContainer );
 
-                        let goToAccountButton = document.createElement("button");
+                        const goToAccountButton = document.createElement("button");
                         goToAccountButton.classList.add("btn");
                         goToAccountButton.classList.add('btn-primary');
                         goToAccountButton.setAttribute("id", "go_to_account_button");
@@ -334,11 +335,11 @@ function getListings() {
                         document.getElementById("go_to_account_button_container").appendChild(goToAccountButton);
 
                     } else {
-                        let noListingsMsg = document.createElement("p");
+                        const noListingsMsg = document.createElement("p");
                         noListingsMsg.innerHTML = "There don't appear to be any listings in your province. Expand search?";
                         noListingsMsg.setAttribute("id", "no_listing_msg");
 
-                        let accountButtonContainer = document.getElementById("go_to_account_button_container");
+                        const accountButtonContainer = document.getElementById("go_to_account_button_container");
                         document.getElementById("listing_container").insertBefore(noListingsMsg, accountButtonContainer );
 
                     }
@@ -369,59 +370,59 @@ function getListings() {
  *              the extra buttons for the myListings.html page
  */
 function createListingRow(listing, addUserButtons) {
-    let articleDiv = document.createElement("article");
+    const articleDiv = document.createElement("article");
     articleDiv.classList.add("search-result");
     articleDiv.classList.add("row");
     articleDiv.classList.add("listing_row");
     articleDiv.classList.add("py-3");
     document.getElementById("listing_container").appendChild(articleDiv);
 
-    let imgDiv = document.createElement("div");
+    const imgDiv = document.createElement("div");
     imgDiv.classList.add("col-lg-3");
     articleDiv.appendChild(imgDiv);
 
-    let imgLink = document.createElement("a");
+    const imgLink = document.createElement("a");
     imgLink.href = `./listing.html?${listing.id}`
     imgDiv.appendChild(imgLink);
 
-    let img = document.createElement("img");
+    const img = document.createElement("img");
     img.src = "../img/CoralA.jpg";
     img.alt = "A picture of coral";
     imgLink.appendChild(img);
     
-    let listingInfoDiv = document.createElement("div");
+    const listingInfoDiv = document.createElement("div");
     listingInfoDiv.classList.add("col-lg-9");
     articleDiv.appendChild(listingInfoDiv);
 
-    let titleLink = document.createElement("a");
+    const titleLink = document.createElement("a");
     titleLink.href = `./listing.html?${listing.id}`;
     listingInfoDiv.appendChild(titleLink);
 
-    let listingTitle = document.createElement("h4");
+    const listingTitle = document.createElement("h4");
     listingTitle.innerHTML = listing.title;
     titleLink.appendChild(listingTitle);
 
-    let listingDate = document.createElement("p");
+    const listingDate = document.createElement("p");
     listingDate.classList.add("text-muted");
     listingDate.classList.add("listing_subtext");
     listingDate.innerHTML = `Date Posted: ${listing.date}`;
     listingInfoDiv.appendChild(listingDate);
 
-    let listingLocation = document.createElement("p");
+    const listingLocation = document.createElement("p");
     listingLocation.classList.add("text-muted");
     listingLocation.classList.add("listing_subtext");
-    let province = listing.province;
+    const province = listing.province;
     listingLocation.innerHTML = `Location: ${capitalize(listing.city)}, ${province.toUpperCase()}`;
     listingInfoDiv.appendChild(listingLocation);
 
-    let listingDescription = document.createElement("p");
+    const listingDescription = document.createElement("p");
     listingDescription.innerHTML = listing.description;
     listingInfoDiv.appendChild(listingDescription);
 
     //Checks if the buttons in myListings.html
     //should be generated
     if (addUserButtons) {
-        let viewListingButton = document.createElement("button");
+        const viewListingButton = document.createElement("button");
         viewListingButton.classList.add("btn");
         viewListingButton.classList.add("btn-primary");
         viewListingButton.classList.add("my_listings_button");
@@ -432,12 +433,12 @@ function createListingRow(listing, addUserButtons) {
         listingInfoDiv.appendChild(viewListingButton);
 
         //The DELETE listing button
-        let deleteListingButton = document.createElement("button");
+        const deleteListingButton = document.createElement("button");
         deleteListingButton.classList.add("btn");
         deleteListingButton.classList.add("btn-danger");
         deleteListingButton.classList.add("my_listings_button");
         deleteListingButton.onclick = function() {
-            let userConfirm = window.confirm("Are you sure you want to delete this listing?");
+            const userConfirm = window.confirm("Are you sure you want to delete this listing?");
             if (userConfirm) {
                 listing.visible = false;
                 db.collection("listing").doc(listing.docID).update(listing)
@@ -473,10 +474,10 @@ function getSpecificListing(userID) {
         db.collection("listing").doc(userID)
         .get()
         .then(function(doc) {
-            let listingData = doc.data();
-            let listingID = doc.id;
-            let listingListerID = listingData.user;
-            let contactSellerButton = document.getElementById("listing_contact_button");
+            const listingData = doc.data();
+            const listingID = doc.id;
+            const listingListerID = listingData.user;
+            const contactSellerButton = document.getElementById("listing_contact_button");
 
             createListingPage(listingData);
             updateContactSellerButton(contactSellerButton, listingID, listingListerID, user.uid);
@@ -495,90 +496,90 @@ function createListingPage(listing) {
     if (listing.species == 'sps' || listing.species =='lps') {
         listing.species = convertPolypData(listing.species);
     }
-    let domInsertion = document.getElementById("listing_insertion");
+    const domInsertion = document.getElementById("listing_insertion");
 
-    let titleContainer = document.createElement("div");
+    const titleContainer = document.createElement("div");
     titleContainer.classList.add("container");
     domInsertion.appendChild(titleContainer);
 
-    let title = document.createElement("h3");
+    const title = document.createElement("h3");
     title.innerHTML = listing.title;
     titleContainer.appendChild(title);
 
-    let dateText = document.createElement("p");
+    const dateText = document.createElement("p");
     dateText.classList.add("text-muted");
     dateText.classList.add("listing_subtext");
     dateText.innerHTML = `Date Posted: ${listing.date}`;
     titleContainer.appendChild(dateText);
 
-    let locationText = document.createElement("p");
+    const locationText = document.createElement("p");
     locationText.classList.add("text-muted");
     locationText.classList.add("listing_subtext")
     locationText.innerHTML = `Location: ${capitalize(listing.city)}, ${listing.province.toUpperCase()}`;
     titleContainer.appendChild(locationText);
 
-    let listingTextContainer = document.createElement("div");
+    const listingTextContainer = document.createElement("div");
     listingTextContainer.classList.add("container");
     listingTextContainer.classList.add("py-3")
     domInsertion.appendChild(listingTextContainer);
 
-    let row = document.createElement("div");
+    const row = document.createElement("div");
     row.classList.add("row");
     listingTextContainer.appendChild(row);
 
-    let imgContainer = document.createElement("div");
+    const imgContainer = document.createElement("div");
     imgContainer.classList.add("col-md-6");
     imgContainer.classList.add("py-1");
     row.appendChild(imgContainer);
 
-    let img = document.createElement("img");
+    const img = document.createElement("img");
     img.classList.add("img-fluid");
     img.src = "../img/coral.jpg";
     img.alt = "a picture of coral";
     imgContainer.appendChild(img);
 
-    let descriptionContainer = document.createElement("div");
+    const descriptionContainer = document.createElement("div");
     descriptionContainer.classList.add("col-md-6");
     descriptionContainer.classList.add("py-1");
     row.appendChild(descriptionContainer);
 
-    let speciesContainer = document.createElement("div");
+    const speciesContainer = document.createElement("div");
     speciesContainer.classList.add("py-2");
     descriptionContainer.appendChild(speciesContainer);
 
-    let speciesTitle = document.createElement("h5");
+    const speciesTitle = document.createElement("h5");
     speciesTitle.innerHTML = `Species:`;
     speciesContainer.appendChild(speciesTitle);
 
-    let species = document.createElement("p");
+    const species = document.createElement("p");
     species.innerHTML = capitalize(listing.species);
     speciesContainer.appendChild(species);
 
-    let fragContainer = document.createElement("div");
+    const fragContainer = document.createElement("div");
     fragContainer.classList.add("py-2");
     descriptionContainer.appendChild(fragContainer);
 
-    let fragTitle = document.createElement("h5");
+    const fragTitle = document.createElement("h5");
     fragTitle.innerHTML = `Coral Size:`;
     fragContainer.appendChild(fragTitle);
 
-    let frag = document.createElement("p");
+    const frag = document.createElement("p");
     frag.innerHTML = convertFragData(listing.fragType);
     fragContainer.appendChild(frag);
 
-    let userDescriptionContainer = document.createElement("div");
+    const userDescriptionContainer = document.createElement("div");
     userDescriptionContainer.classList.add("py-2");
     descriptionContainer.appendChild(userDescriptionContainer);
 
-    let descriptionTitle = document.createElement("h5");
+    const descriptionTitle = document.createElement("h5");
     descriptionTitle.innerHTML = `Description:`;
     userDescriptionContainer.appendChild(descriptionTitle);
 
-    let description = document.createElement("p");
+    const description = document.createElement("p");
     description.innerHTML = listing.description;
     userDescriptionContainer.appendChild(description);
 
-    let cost = document.createElement("h5");
+    const cost = document.createElement("h5");
     cost.innerHTML = `Cost: $${listing.price}`;
     userDescriptionContainer.appendChild(cost);
 }
@@ -629,7 +630,7 @@ function getListingData(listerID) {
         db.collection("listing").doc(listerID)
         .get()
         .then(function(doc) {
-            let listingData = doc.data();
+            const listingData = doc.data();
             document.getElementById("listing_title").value = listingData.title;
             document.getElementById("load_spinner").style.display = "none";
         })
@@ -658,20 +659,20 @@ function sendMessage(listerID) {
             thisListingID = doc.id;
             listingUserID = listingData.user;
         }).then(function() {
-            let messageSubject = document.getElementById("message_subject").value;
-            let message = document.getElementById("messageBody").value;
-            let thisUser = firebase.auth().currentUser.uid;
-            let thisDate = new Date();
-            let listYear = thisDate.getFullYear();
-            let listMonth = thisDate.getMonth();
-            let listDay = thisDate.getDate();
-            let listHour = thisDate.getHours();
-            let listMin = thisDate.getMinutes();
-            let listMonthTranslated = translateMonth(listMonth);
+            const messageSubject = document.getElementById("message_subject").value;
+            const message = document.getElementById("messageBody").value;
+            const thisUser = firebase.auth().currentUser.uid;
+            const thisDate = new Date();
+            const listYear = thisDate.getFullYear();
+            const listMonth = thisDate.getMonth();
+            const listDay = thisDate.getDate();
+            const listHour = thisDate.getHours();
+            const listMin = thisDate.getMinutes();
+            const listMonthTranslated = translateMonth(listMonth);
 
-            let listDate = `${listMonthTranslated} ${listDay}, ${listYear}, ${listHour}:${listMin}`;
+            const listDate = `${listMonthTranslated} ${listDay}, ${listYear}, ${listHour}:${listMin}`;
 
-            let thisMessage = {
+            const thisMessage = {
                 sender: thisUser,
                 receiver: listingUserID,
                 subject: messageSubject,
@@ -720,25 +721,26 @@ function populateInbox() {
         .get()
         .then(function(querySnapshot) {
             querySnapshot.forEach(function(doc) {
-                let thisMessage = doc.data();
+                const thisMessage = doc.data();
                 thisMessage.docID = doc.id;
                 userMessages.push(thisMessage);
                 document.getElementById("load_spinner").style.display = "none"; 
             }); 
         }).then(function() {
             if (userMessages.length == 0) {
-                let emptyInboxMsg = document.getElementById("inbox_insertion");
+                const emptyInboxMsg = document.getElementById("inbox_insertion");
                 emptyInboxMsg.innerHTML = "You have no messages!";
+                document.getElementById("load_spinner").style.display = "none"; 
             } else {
                 userMessages.forEach((message) => {
-                    let msgSenderID = message.sender;
+                    const msgSenderID = message.sender;
                     let msgSenderName;
-                    let messageDocID = message.docID;
+                    const messageDocID = message.docID;
 
                     db.collection("users").doc(msgSenderID)
                     .get()
                     .then(function(doc) {
-                        let docData = doc.data();
+                        const docData = doc.data();
                         msgSenderName = docData.name; 
                         createInboxMessage(message, msgSenderName, messageDocID);
                     })
@@ -766,28 +768,28 @@ function populateInbox() {
  *              the message doc id
  */
 function createInboxMessage(message, msgSenderName, messageID) {
-    let senderName = msgSenderName;
-    let inboxMessageID = messageID;
+    const senderName = msgSenderName;
+    const inboxMessageID = messageID;
 
-    let tableRow = document.createElement("tr");
+    const tableRow = document.createElement("tr");
     document.getElementById("inbox_insertion").appendChild(tableRow);
 
-    let sender = document.createElement("td");
-    let senderLink = document.createElement("a");
+    const sender = document.createElement("td");
+    const senderLink = document.createElement("a");
     senderLink.href = `./viewMessage.html?${inboxMessageID}`;
     senderLink.innerHTML = senderName
     sender.appendChild(senderLink);
     tableRow.appendChild(sender);
 
-    let subject = document.createElement("td");
-    let subjectLink = document.createElement("a");
+    const subject = document.createElement("td");
+    const subjectLink = document.createElement("a");
     subjectLink.href = `./viewMessage.html?${inboxMessageID}`;
     subjectLink.innerHTML = message.subject;
     subject.appendChild(subjectLink);
     tableRow.appendChild(subject);
 
-    let dateSent = document.createElement("td");
-    let dateLink = document.createElement("a");
+    const dateSent = document.createElement("td");
+    const dateLink = document.createElement("a");
     dateLink.href = `./viewMessage.html?${inboxMessageID}`;
     dateLink.innerHTML = message.date;
     dateSent.appendChild(dateLink);
@@ -840,7 +842,7 @@ function getMessage(messageID) {
  * @param {} listingID 
  */
 function changeReplyButton(listingID) {
-    let replyButton = document.getElementById("view_message_reply_button");
+    const replyButton = document.getElementById("view_message_reply_button");
     replyButton.href = `./sendMessage.html?${listingID}`;
 }
 
@@ -860,7 +862,7 @@ function getAccountInfo() {
         db.collection("users").doc(user.uid)
         .get()
         .then(function(data) {
-            let userData = data.data();
+            const userData = data.data();
             fillAccountInfo(userData);
             document.getElementById("load_spinner").style.display = "none";
         })    
@@ -928,7 +930,7 @@ function editProfileGetAccountInfo() {
         db.collection("users").doc(user.uid)
         .get()
         .then(function(data) {
-            let userData = data.data();           
+            const userData = data.data();           
             fillPlaceholderData(userData);
             document.getElementById("load_spinner").style.display = "none";
         })     
@@ -961,7 +963,7 @@ function editProfileButtonHandler() {
     let editProvince = document.getElementById("edit_province").value;
     let editDescription = document.getElementById("edit_profile_description").value;
 
-    let profileInfo = {
+    const profileInfo = {
         name: editName,
         email: editEmail,
         city: editCity,
